@@ -3,7 +3,7 @@ import { IDBConnection } from '../../../shared/services/DB/iDB-connection.servic
 import { IUser } from '../domain/interface/iUser';
 
 export class UserMapper extends BaseMapper< IUser >{
-  constructor(private connection: IDBConnection) {
+  constructor(protected connection: IDBConnection) {
     super(connection);
   }
 }

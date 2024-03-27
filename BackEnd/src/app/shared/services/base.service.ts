@@ -7,8 +7,11 @@ export class BaseService<TModel> {
     this.mapper = baseMapper;
   }
 
-  async create(tableName, userModel): Promise<TModel> {
-    // Example usage of baseMapper method
-    return await this.mapper.create(tableName, userModel);
+  async create(tableName, model): Promise<TModel> {
+    return await this.mapper.create(tableName, model);
+  }
+
+  async retrieveAll(tableName): Promise<TModel[]>{
+    return await this.mapper.retrieveAll(tableName);
   }
 }

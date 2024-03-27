@@ -31,4 +31,4 @@ const baseService = createBaseService();
 const userMapper = createUserMapper();
 const userService = createUserService();
 
-export { baseMapper, baseService, userMapper, userService };
+export { baseMapper, baseService, userMapper, userService, connectionDB };

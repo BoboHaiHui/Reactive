@@ -8,7 +8,7 @@ export class UserService extends BaseService< User >{
     super(userMapper)
   }
 
- async register():Promise<User>{
-    return
+ async register(tableName: string, userModel: User):Promise<User>{
+    return super.create(tableName, userModel);
   }
 }

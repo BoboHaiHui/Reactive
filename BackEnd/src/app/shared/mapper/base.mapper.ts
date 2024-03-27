@@ -30,7 +30,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
 
       console.log('Inserted row:', rows);
       connection.release();
-      return model; // Return the inserted model or any other data you need
+      return model;
     } catch (error) {
       console.error('Error inserting user:', error);
       throw error;
@@ -38,6 +38,10 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
   };
 
   retrieve(criteria: any): Promise<TModel[]> {
+    throw new Error('Method not implemented.');
+  }
+
+  retrieveAll(tableName: string): Promise<TModel[]> {
     throw new Error('Method not implemented.');
   }
 
@@ -52,6 +56,5 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
   delete(id: string): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
-
 
 }
