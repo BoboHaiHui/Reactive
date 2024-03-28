@@ -1,7 +1,8 @@
 import mysql from 'mysql2/promise'; // Import the mysql package
 
-import { IDBConnection } from '../services/DB/iDB-connection.service';
-import { IBaseMapper } from './iBase.mapper';
+import { IDBConnection } from '../services/DB/DBConnection.interface';
+import logger from '../services/logger/logger.service';
+import { IBaseMapper } from './base.mapper.interface';
 
 export class BaseMapper<TModel> implements IBaseMapper<TModel> {
   protected model: any;
@@ -25,14 +26,12 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       const sql = "INSERT INTO ?? SET ?"
       const inserts = [tableName, model];
       const query = this.pool.format(sql, inserts);
-
       const [rows, fields] = await connection.execute(query);
-
       console.log('Inserted row:', rows);
       connection.release();
       return model;
     } catch (error) {
-      console.error('Error inserting user:', error);
+      logger.error(error, {description:'base.mapper-create error', securityFlag:false, severity:7})
       throw error;
     }
   };
@@ -41,12 +40,41 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
     throw new Error('Method not implemented.');
   }
 
-  retrieveAll(tableName: string): Promise<TModel[]> {
-    throw new Error('Method not implemented.');
-  }
+  async retrieveAll(tableName: string): Promise<TModel[]> {
+    let connection;
+    try {
+      connection = await this.pool.getConnection();
+      const sql = "SELECT * FROM ?? ";
+      const inserts = [tableName];
+      const query = this.pool.format(sql, inserts);
+      const [rows, fields] = await connection.execute(query);
+      console.log('RetrieveAll data:', rows);
+      connection.release();
+      return rows;
+    } catch (error) {
+      logger.error(error, {description:'base.mapper-retrieveAll error', securityFlag:false, severity:7})
+      throw error;
+    }
+  };
 
-  retrieveOne(filter: any): Promise<TModel> {
-    throw new Error('Method not implemented.');
+  //de implementat
+  async retrieveOne(tableName:string, filter: any): Promise<TModel> {
+    let connection;
+    try {
+      connection = await this.pool.getConnection();
+      const sql = "SELECT * FROM ?? WHERE ?? = ? ";
+      const inserts = [tableName];
+      const query = this.pool.format(sql, inserts);
+
+      const [rows, fields] = await connection.execute(query);
+
+      console.log('RetrieveAll data:', rows);
+      connection.release();
+      return rows;
+    } catch (error) {
+      console.error('Error inserting user:', error);
+      throw error;
+    }
   }
 
   update(model: TModel): Promise<TModel> {
@@ -56,5 +84,4 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
   delete(id: string): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
-
 }

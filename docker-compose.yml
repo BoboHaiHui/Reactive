@@ -14,7 +14,7 @@ services:
     ports:
       - "3306:3306"
   backend:
-    image: 7c3856b39437
+    image: 8a9d4dbedf01
     volumes:
       - ./BackEnd:/src
     ports:

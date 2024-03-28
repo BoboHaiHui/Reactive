@@ -11,4 +11,8 @@ export class UserService extends BaseService< User >{
  async register(tableName: string, userModel: User):Promise<User>{
     return super.create(tableName, userModel);
   }
+
+  async retrieveAll(tableName: string):Promise<User[]>{
+    return this.userMapper.retrieveAll(tableName);
+  }
 }

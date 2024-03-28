@@ -1,4 +1,4 @@
-import { IUser } from '../interface/iUser';
+import { IUser } from '../interface/user.interface';
 import { Role } from './role';
 
 export class User implements IUser{

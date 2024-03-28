@@ -1,4 +1,4 @@
-import { IBaseMapper } from '../mapper/iBase.mapper';
+import { IBaseMapper } from '../mapper/base.mapper.interface';
 
 export class BaseService<TModel> {
   protected mapper: IBaseMapper<any>;

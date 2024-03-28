@@ -1,14 +1,15 @@
 import app from './app';
 import { connectionDB } from './app/shared/diContainer/diContainer';
-import { config } from './config';
+import logger from './app/shared/services/logger/logger.service';
+import config from './config';
 
 const _app = app;
 const port: number = config.server.port;
 const dbConnection = connectionDB;
 
-// Start the server
+// Start express
 _app.listen(port, () => {
-  console.log(`Server is listening on port ${port}`);
+  logger.start();
 });
 
 const shutdownServer = async () => {
@@ -16,10 +17,10 @@ const shutdownServer = async () => {
     if (dbConnection) {
       await dbConnection.stop();
     }
-    console.log('server shut down');
+    await logger.stop();
     process.exit(0); // Exit the process gracefully
   } catch (error) {
-    console.log(error);
+
     process.exit(1); // Exit the process with an error code
   }
 };
