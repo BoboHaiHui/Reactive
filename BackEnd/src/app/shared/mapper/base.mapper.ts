@@ -27,11 +27,11 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       const inserts = [tableName, model];
       const query = this.pool.format(sql, inserts);
       const [rows, fields] = await connection.execute(query);
-      console.log('Inserted row:', rows);
+      logger.debug('Inserted row:', rows);
       connection.release();
       return model;
     } catch (error) {
-      logger.error(error, {description:'base.mapper-create error', securityFlag:false, severity:7})
+      logger.critical(error, {description:'base.mapper-create error', securityFlag:false, severity:7})
       throw error;
     }
   };
@@ -52,7 +52,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       connection.release();
       return rows;
     } catch (error) {
-      logger.error(error, {description:'base.mapper-retrieveAll error', securityFlag:false, severity:7})
+      logger.critical(error, {description:'base.mapper-retrieveAll error', securityFlag:false, severity:5})
       throw error;
     }
   };
@@ -72,7 +72,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       connection.release();
       return rows;
     } catch (error) {
-      console.error('Error inserting user:', error);
+      logger.critical(error, {description:'base.mapper-retrieveAll error', securityFlag:false, severity:5})
       throw error;
     }
   }
