@@ -4,6 +4,5 @@ import { RoleType } from './role.enums';
 export interface IRole{
   type: RoleType,
   description: string,
-  permissions: Permissions[],
-  default: boolean
+  permissions: Permissions[]
 }

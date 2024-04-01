@@ -5,5 +5,10 @@ export enum Permissions{
   DeleteUser = 'DeleteUser',
   ActivateUser = 'ActivateUser',
   UpdateMyUser = 'UpdateMyUser',
-  RetrieveMyUser = 'RetrieveMyUser'
+  RetrieveMyUser = 'RetrieveMyUser',
+
+  CreateRole = 'CreateRole',
+  RetrieveRole = 'RetrieveRole',
+  UpdateRole = 'UpdateRole',
+  DeleteRole = 'DeleteRole',
 }

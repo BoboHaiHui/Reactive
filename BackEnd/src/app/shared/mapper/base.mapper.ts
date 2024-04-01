@@ -22,7 +22,6 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
     let connection;
     try {
       connection = await this.pool.getConnection();
-
       const sql = "INSERT INTO ?? SET ?"
       const inserts = [tableName, model];
       const query = this.pool.format(sql, inserts);
@@ -36,8 +35,20 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
     }
   };
 
-  retrieve(criteria: any): Promise<TModel[]> {
-    throw new Error('Method not implemented.');
+  async retrieve(tableName:string, field: string, value: any): Promise<TModel[]> {
+    let connection;
+    try {
+      connection = await this.pool.getConnection();
+      const sql = "SELECT * FROM ?? WHERE ?? = ? ";
+      const inserts = [tableName, field, value];
+      const query = this.pool.format(sql, inserts);
+      const [rows, fields] = await connection.execute(query);
+      connection.release();
+      return rows;
+    } catch (error) {
+      logger.critical(error, {description:'base.mapper-retrieveAll error', securityFlag:false, severity:5})
+      throw error;
+    }
   }
 
   async retrieveAll(tableName: string): Promise<TModel[]> {
@@ -48,7 +59,6 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       const inserts = [tableName];
       const query = this.pool.format(sql, inserts);
       const [rows, fields] = await connection.execute(query);
-      console.log('RetrieveAll data:', rows);
       connection.release();
       return rows;
     } catch (error) {
@@ -57,31 +67,40 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
     }
   };
 
-  //de implementat
-  async retrieveOne(tableName:string, filter: any): Promise<TModel> {
+  async retrieveOne(tableName:string, field: string, value: any): Promise<TModel> {
     let connection;
     try {
       connection = await this.pool.getConnection();
-      const sql = "SELECT * FROM ?? WHERE ?? = ? ";
-      const inserts = [tableName];
+      const sql = "SELECT * FROM ?? WHERE ?? = ? LIMIT 1";
+      const inserts = [tableName, field, value];
       const query = this.pool.format(sql, inserts);
-
       const [rows, fields] = await connection.execute(query);
-
-      console.log('RetrieveAll data:', rows);
       connection.release();
       return rows;
     } catch (error) {
       logger.critical(error, {description:'base.mapper-retrieveAll error', securityFlag:false, severity:5})
       throw error;
     }
-  }
+  };
 
-  update(model: TModel): Promise<TModel> {
-    throw new Error('Method not implemented.');
-  }
+  async update(tableName: string, model: TModel, field: string, value: any): Promise<TModel> {
+    let connection;
+    try {
+      connection = await this.pool.getConnection();
+      const sql = "UPDATE ?? SET ? WHERE ??=? ";
+      const inserts = [tableName, model, field, value];
+      const query = this.pool.format(sql, inserts);
+      const [rows, fields] = await connection.execute(query);
+      logger.debug('Inserted row:', rows);
+      connection.release();
+      return model;
+    } catch (error) {
+      logger.critical(error, {description:'base.mapper-update error', securityFlag:false, severity:7})
+      throw error;
+    }
+  };
 
-  delete(id: string): Promise<boolean> {
+  delete(tableName: string, id: number): Promise<boolean> {
     throw new Error('Method not implemented.');
   }
 }

@@ -10,4 +10,10 @@ userRoutes.route('/register')
 userRoutes.route('/retrieveAll')
   .get( userController.retrieveAll )
 
+userRoutes.route('/retrieveOne')
+  .get( userController.retrieveOne )
+
+userRoutes.route('/update')
+  .patch( userController.update )
+
 export default userRoutes;

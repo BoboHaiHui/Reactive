@@ -6,5 +6,4 @@ export class Role implements IRole{
   type: RoleType;
   description: string;
   permissions: Permissions[];
-  default: boolean;
 }

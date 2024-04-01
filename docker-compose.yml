@@ -35,6 +35,8 @@ services:
   # MongoDB: https://hub.docker.com/_/mongo/
   mongo:
     image: mongo:5.0.13
+    volumes:
+      - graylog_mongo_data:/data/db
     ports:
       - '27018:27018'
   # Elasticsearch: https://www.elastic.co/guide/en/elasticsearch/reference/7.10/docker.html
@@ -53,6 +55,8 @@ services:
       resources:
         limits:
           memory: 1g
+    volumes:
+      - graylog_elasticsearch_data:/usr/share/elasticsearch/data
 
   # Graylog: https://hub.docker.com/r/graylog/graylog/
   graylog:
@@ -68,6 +72,8 @@ services:
     depends_on:
       - mongo
       - elasticsearch
+    volumes:
+      - graylog_data:/usr/share/graylog/data
     ports:
       # Graylog web interface and REST API
       - 9000:9000
@@ -81,3 +87,7 @@ services:
       - 12201:12201/udp
 volumes:
   mysql_data_volume:
+  graylog_mongo_data:
+  graylog_elasticsearch_data:
+  graylog_data:
+

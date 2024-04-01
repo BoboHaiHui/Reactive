@@ -1,13 +1,14 @@
+
 import { BaseMapper } from '../../../shared/mapper/base.mapper';
 import { IDBConnection } from '../../../shared/services/DB/DBConnection.interface';
-import { User } from '../domain/models/user';
+import { Role } from '../domain/model/role';
 
-export class UserMapper extends BaseMapper< User >{
+export class RoleMapper extends BaseMapper< Role >{
   constructor(protected connection: IDBConnection) {
     super(connection);
   }
 
-  async retrieveAll(tableName:string): Promise<User[]>{
-    return await super.retrieveAll(tableName) as User[];
+  async createRole(tableName:string, roleData: Role): Promise<Role>{
+    return await this.create(tableName, roleData) as Role;
   }
 }

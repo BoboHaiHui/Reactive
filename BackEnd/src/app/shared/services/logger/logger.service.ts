@@ -25,7 +25,7 @@ const loggerRequest = (req: Request, res: Response, next: NextFunction) => {
     });
     next();
   } catch (error) {
-    console.error(error);
+    logger.alert(error, {description:'Http log was not send', securityFlag:true, severity:7})
   }
 };
 
