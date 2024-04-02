@@ -19,6 +19,12 @@ const config = {
     user: user,
     password: password,
     database: database
+  },
+  user:{
+    defaultUserId: 2,
+    blocked: true,
+    activationCodeLength: 8,
+    password_sufix: process.env.PASSWORD_SUFIX
   }
 }
 

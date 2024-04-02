@@ -10,4 +10,15 @@ export class UserMapper extends BaseMapper< User >{
   async retrieveAll(tableName:string): Promise<User[]>{
     return await super.retrieveAll(tableName) as User[];
   }
+
+  async register (tableName:string, userData: User): Promise<boolean>{
+    let userRegistred: User;
+    userRegistred = await this.create(tableName, userData);
+    console.log('userRegistred', userRegistred)
+    if (userRegistred){
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

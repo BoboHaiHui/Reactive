@@ -22,7 +22,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
     let connection;
     try {
       connection = await this.pool.getConnection();
-      const sql = "INSERT INTO ?? SET ?"
+      const sql = "INSERT INTO ?? SET ?";
       const inserts = [tableName, model];
       const query = this.pool.format(sql, inserts);
       const [rows, fields] = await connection.execute(query);
@@ -30,7 +30,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       connection.release();
       return model;
     } catch (error) {
-      logger.critical(error, {description:'base.mapper-create error', securityFlag:false, severity:7})
+      logger.critical(error, {description:'base.mapper --> create error', securityFlag:false, severity:7})
       throw error;
     }
   };
@@ -74,6 +74,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       const sql = "SELECT * FROM ?? WHERE ?? = ? LIMIT 1";
       const inserts = [tableName, field, value];
       const query = this.pool.format(sql, inserts);
+      console.log(query)
       const [rows, fields] = await connection.execute(query);
       connection.release();
       return rows;

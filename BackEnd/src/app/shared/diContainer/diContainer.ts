@@ -1,4 +1,3 @@
-import { Role } from '../../modules/role/domain/model/role';
 import { RoleMapper } from '../../modules/role/mapper/role.mapper';
 import { RoleService } from '../../modules/role/services/role.service';
 import { UserMapper } from '../../modules/user/mapper/user.mapper';

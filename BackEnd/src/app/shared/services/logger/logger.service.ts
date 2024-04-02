@@ -45,7 +45,7 @@ const stop = async () => {
 };
 
 const debug = (description: string, value?: any) => {
-  console.log(description, value)
+  console.error(description, value)
 };
 
 const info = (logFormat: ILogFormat) => {
