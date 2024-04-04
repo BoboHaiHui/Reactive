@@ -3,7 +3,6 @@ import { randomBytes } from 'crypto';
 
 import config from '../../../../config';
 import { sessionService } from '../../../shared/diContainer/diContainer';
-import { generateSessionCookie } from '../../../shared/services/cookies/cookie.service';
 import logger from '../../../shared/services/logger/logger.service';
 import { utils } from '../../../shared/utils/validations';
 import { ILoginInput, IRegisterInput, IResponceMessage } from '../domain/interface/input/userRegisterInput.interface';

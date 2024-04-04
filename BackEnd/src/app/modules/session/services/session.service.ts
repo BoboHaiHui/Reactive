@@ -11,8 +11,8 @@ export class SessionService{
   constructor(private sessionMapper: SessionMapper){}
 
   async createSession(user: User): Promise<string>{
-    const sessionCookie = randomBytes(20).toString('hex');
-    this.session.sessionId = sessionCookie;
+    const sessionId = randomBytes(20).toString('hex');
+    this.session.sessionId = sessionId;
     this.session.sessionExpiration = Math.round(Date.now()/(1000*60) + config.session.sessionExpiration * 60);
     this.session.idleExpiration = Math.round( Date.now()/(1000*60) + config.session.idelExpiration * 60);
     this.session.userId = user.id;
@@ -23,8 +23,13 @@ export class SessionService{
       logger.debug('session.service ---> create session error', error);
       throw(error);
     }
-    return sessionCookie;
+    return sessionId;
   }
+
+  async retrieveSessionIdPermissions(sessionId: string): Promise<[]>{
+    return await this.sessionMapper.retrieveSessionIdPermissions(sessionId);
+  }
+
 
 
 }

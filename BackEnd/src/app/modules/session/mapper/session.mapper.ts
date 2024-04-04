@@ -1,3 +1,5 @@
+import { table } from 'console';
+
 import { BaseMapper } from '../../../shared/mapper/base.mapper';
 import { IDBConnection } from '../../../shared/services/DB/DBConnection.interface';
 import logger from '../../../shared/services/logger/logger.service';
@@ -20,5 +22,33 @@ export class SessionMapper extends BaseMapper< Session >{
       logger.critical(error, {description:'session.mapper --> create session error', securityFlag:false, severity:7})
       throw error;
     }
+  }
+
+  async retrieveSessionIdData(sessionId:string): Promise<Session>{
+    const tableName = 'sessions';
+    const columnName = 'sessionId';
+    try{
+      return await this.retrieveOne(tableName, columnName, sessionId)
+    }catch(error){
+      logger.critical(error, {description:'session.mapper --> retrieve session data error', securityFlag:false, severity:7})
+      throw error;
+    }
+  }
+
+  async retrievePermissionByRole(role:number): Promise<any>{
+    const tableName = 'roles';
+    const columnName = 'id';
+    try{
+      return await this.retrieveOne(tableName, columnName, role);
+    }catch(error){
+      logger.critical(error, {description:'session.mapper --> create permissions error', securityFlag:false, severity:7})
+      throw error;
+    }
+  }
+
+  async retrieveSessionIdPermissions(sessionId:string): Promise<[]>{
+    const sessionIdData:Session = await this.retrieveSessionIdData(sessionId);
+    const permissions = await this.retrievePermissionByRole(sessionIdData[0].userRole)
+    return permissions[0].permissions;
   }
 }

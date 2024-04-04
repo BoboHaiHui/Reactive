@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { userController } from '../modules/user/controller/user.controller';
+import { checkPermissions } from '../shared/middleware/checkPermission';
 
 const userRoutes = express.Router();
 
