@@ -25,6 +25,10 @@ const config = {
     blocked: true,
     activationCodeLength: 8,
     password_sufix: process.env.PASSWORD_SUFIX
+  },
+  session:{
+    sessionExpiration: 4,
+    idelExpiration: 1
   }
 }
 

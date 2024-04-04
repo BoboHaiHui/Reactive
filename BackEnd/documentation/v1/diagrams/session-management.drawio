@@ -1,0 +1,22 @@
+<mxfile host="app.diagrams.net" modified="2024-04-03T08:02:49.795Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" etag="Ge-XKhZ6VItXZCDxW55q" version="24.2.0" type="device">
+  <diagram name="Page-1" id="h6zoK7xYofdBVBfvjUaW">
+    <mxGraphModel dx="1434" dy="820" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Xb2jeEYYfomc39HHAmd6-1" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Session-management&lt;/h1&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="330" y="40" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Xb2jeEYYfomc39HHAmd6-2" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Cookie&lt;/h1&gt;&lt;div&gt;-&lt;/div&gt;" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="40" y="120" width="470" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Xb2jeEYYfomc39HHAmd6-4" value="Login request" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="365" y="150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Xb2jeEYYfomc39HHAmd6-6" value="Validating credentials" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="380" y="280" width="95" height="90" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

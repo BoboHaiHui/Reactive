@@ -3,8 +3,8 @@ import { IDBConnection } from '../../../shared/services/DB/DBConnection.interfac
 import { User } from '../domain/models/user';
 
 export class UserMapper extends BaseMapper< User >{
-  constructor(protected connection: IDBConnection) {
-    super(connection);
+  constructor(protected dbConnection: IDBConnection) {
+    super(dbConnection);
   }
 
   async retrieveAll(tableName:string): Promise<User[]>{
@@ -14,7 +14,6 @@ export class UserMapper extends BaseMapper< User >{
   async register (tableName:string, userData: User): Promise<boolean>{
     let userRegistred: User;
     userRegistred = await this.create(tableName, userData);
-    console.log('userRegistred', userRegistred)
     if (userRegistred){
       return true;
     } else {

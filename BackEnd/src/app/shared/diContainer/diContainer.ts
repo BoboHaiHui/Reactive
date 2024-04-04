@@ -1,5 +1,7 @@
 import { RoleMapper } from '../../modules/role/mapper/role.mapper';
 import { RoleService } from '../../modules/role/services/role.service';
+import { SessionMapper } from '../../modules/session/mapper/session.mapper';
+import { SessionService } from '../../modules/session/services/session.service';
 import { UserMapper } from '../../modules/user/mapper/user.mapper';
 import { UserService } from '../../modules/user/services/user.service';
 import { BaseMapper } from '../mapper/base.mapper';
@@ -37,12 +39,24 @@ function createRoleService(): RoleService {
   return new RoleService(roleMapper);
 }
 
+// Factory function to create an instance of SessionMapper
+function createSessionMapper(): SessionMapper {
+  return new SessionMapper(connectionDB);
+}
+
+function createSessionService(): SessionService {
+  const sessionMapper = createSessionMapper();
+  return new SessionService(sessionMapper);
+}
+
 // Export the created instances
 const baseMapper = createBaseMapper();
 const baseService = createBaseService();
 const userMapper = createUserMapper();
 const userService = createUserService();
-const roleMapper = createRoleMapper();
+// const roleMapper = createRoleMapper();
 const roleService = createRoleService();
+// const sessionMapper = createSessionMapper();
+const sessionService = createSessionService();
 
-export { baseMapper, baseService, userMapper, userService, connectionDB, roleService };
+export { baseMapper, baseService, userMapper, userService, connectionDB, roleService, sessionService };

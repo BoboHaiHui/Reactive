@@ -6,8 +6,8 @@ import { Role } from '../domain/model/role';
 export class RoleMapper extends BaseMapper< Role >{
 
 
-  constructor(protected connection: IDBConnection) {
-    super(connection);
+  constructor(protected dbConnection: IDBConnection) {
+    super(dbConnection);
   }
 
   async createRole(tableName:string, roleData: Role): Promise<string>{

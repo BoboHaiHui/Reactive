@@ -1,8 +1,9 @@
 import bcrypt from 'bcryptjs';
-import { error } from 'console';
 import { randomBytes } from 'crypto';
 
 import config from '../../../../config';
+import { sessionService } from '../../../shared/diContainer/diContainer';
+import { generateSessionCookie } from '../../../shared/services/cookies/cookie.service';
 import logger from '../../../shared/services/logger/logger.service';
 import { utils } from '../../../shared/utils/validations';
 import { ILoginInput, IRegisterInput, IResponceMessage } from '../domain/interface/input/userRegisterInput.interface';
@@ -10,13 +11,13 @@ import { User } from '../domain/models/user';
 import { UserMapper } from '../mapper/user.mapper';
 
 export class UserService {
-  constructor( private userMapper: UserMapper)
-  {}
+  private responseMessage: IResponceMessage;
 
- async register(rawRegisterData: IRegisterInput):Promise<IResponceMessage>{
+  constructor(private userMapper: UserMapper) {}
+
+  async register(rawRegisterData: IRegisterInput): Promise<IResponceMessage> {
     const tableName = 'users';
     let mapperResponce: boolean;
-    let responseMessage: IResponceMessage;
     let registerData: User = {
       firstName: '',
       lastName: '',
@@ -26,36 +27,36 @@ export class UserService {
       blocked: config.user.blocked,
       activation_code: '',
     };
-    let emailUniqueness: boolean;
+    let emailInUse: boolean;
 
-    if(!(rawRegisterData.firstname && rawRegisterData.lastname && rawRegisterData.email && rawRegisterData.password )) {
-      responseMessage = {status: 'fail', data: "All fileds are mandatory"};
-      return responseMessage;
-    };
-    if(!(rawRegisterData.terms )) {
-      responseMessage = {status: 'fail', data: "Please agree our terms and conditions"};
-      return responseMessage;
-    };
-    if ( rawRegisterData.firstname.length > 20 || rawRegisterData.lastname.length > 20 ) {
-      responseMessage = {status: 'fail', data: "Max number of characters is 20"};
-      return responseMessage;
-    };
-    if (! utils.passwordValidator(rawRegisterData.password)){
-      responseMessage = {status: 'fail', data: "Password not strong enough"};
-      return responseMessage;
-    };
-    if (! utils.emailValidator(rawRegisterData.email)){
-      responseMessage = {status: 'fail', data: "Not a valid email address"};
-      return responseMessage;
-    };
+    if (!(rawRegisterData.firstname && rawRegisterData.lastname && rawRegisterData.email && rawRegisterData.password)) {
+      this.responseMessage = { status: 'fail', data: 'All fileds are mandatory' };
+      return this.responseMessage;
+    }
+    if (!rawRegisterData.terms) {
+      this.responseMessage = { status: 'fail', data: 'Please agree our terms and conditions' };
+      return this.responseMessage;
+    }
+    if (rawRegisterData.firstname.length > 20 || rawRegisterData.lastname.length > 20) {
+      this.responseMessage = { status: 'fail', data: 'Max number of characters is 20' };
+      return this.responseMessage;
+    }
+    if (!utils.passwordValidator(rawRegisterData.password)) {
+      this.responseMessage = { status: 'fail', data: 'Password not strong enough' };
+      return this.responseMessage;
+    }
+    if (!utils.emailValidator(rawRegisterData.email)) {
+      this.responseMessage = { status: 'fail', data: 'Not a valid email address' };
+      return this.responseMessage;
+    }
 
-    emailUniqueness = await this.checkEmailUniqueness(rawRegisterData.email);
-    if ( !emailUniqueness ){
-      responseMessage = {status: 'fail', data: "E-mail already in use"};
-      return responseMessage;
-    };
+    emailInUse = await this.checkEmailExistance(rawRegisterData.email);
+    if (emailInUse) {
+      this.responseMessage = { status: 'fail', data: 'E-mail already in use' };
+      return this.responseMessage;
+    }
 
-    try{
+    try {
       registerData.firstName = rawRegisterData.firstname;
       registerData.lastName = rawRegisterData.lastname;
       registerData.email = rawRegisterData.email;
@@ -63,40 +64,66 @@ export class UserService {
       registerData.password = await bcrypt.hash(rawRegisterData.password + config.user.password_sufix, 10);
       mapperResponce = await this.userMapper.register(tableName, registerData);
 
-      if (mapperResponce){
-        responseMessage = {status: 'success', data: "User was created"}
-        return responseMessage;
+      if (mapperResponce) {
+        this.responseMessage = { status: 'success', data: 'User was created' };
+        return this.responseMessage;
       } else {
-        responseMessage = {status: 'fail', data: null}
-        return responseMessage;
+        this.responseMessage = { status: 'fail', data: null };
+        return this.responseMessage;
       }
-    } catch(error){
+    } catch (error) {
       logger.debug('user.service --> register error', error);
     }
   }
 
-  async login(rawLoginData: ILoginInput):Promise<IResponceMessage>{
-    // return await this.userMapper.retrieveAll(tableName);
-   throw error();
+  async login(rawLoginData: ILoginInput): Promise<IResponceMessage> {
+    const tableName = 'users';
+    let sessionCookie: string;
+    if (!utils.emailValidator(rawLoginData.email)) {
+      this.responseMessage = { status: 'fail', data: 'Not a valid email address' };
+      return this.responseMessage;
+    }
+    if (!utils.passwordValidator(rawLoginData.password)) {
+      this.responseMessage = { status: 'fail', data: 'Password format is wrong' };
+      return this.responseMessage;
+    }
+    try {
+      const checkUser = await this.userMapper.retrieveOne('users', 'email', rawLoginData.email);
+      if (!Object.keys(checkUser).length) {
+        this.responseMessage = { status: 'fail', data: 'Wrong email or password' };
+        return this.responseMessage;
+      }
+      if (!(await bcrypt.compare(rawLoginData.password + config.user.password_sufix, checkUser[0].password))) {
+        this.responseMessage = { status: 'fail', data: 'Wrong email ' };
+        return this.responseMessage;
+      }
+      sessionCookie = await sessionService.createSession(checkUser[0]);
+    } catch (error) {
+      logger.debug('user.service ---> login error', error);
+      throw error();
+    }
+    this.responseMessage = { status: 'success', data: sessionCookie };
+    return this.responseMessage;
   }
 
-  async retrieveAll(tableName: string):Promise<User[]>{
+  async retrieveAll(tableName: string): Promise<User[]> {
     return await this.userMapper.retrieveAll(tableName);
   }
 
   async retrieveOne(tableName: string, field: string, value: string | number): Promise<User> {
-    return await this.userMapper.retrieveOne(tableName, field, value) as any;
+    return (await this.userMapper.retrieveOne(tableName, field, value)) as any;
   }
 
-  async update(tableName: string, userData: User, field: string, value: string|number): Promise<User> {
+  async update(tableName: string, userData: User, field: string, value: string | number): Promise<User> {
     return await this.userMapper.update(tableName, userData, field, value);
   }
 
-  async checkEmailUniqueness (userEmail: String): Promise<boolean> {
+  async checkEmailExistance(userEmail: String): Promise<boolean> {
     const validation: Object = await this.userMapper.retrieveOne('users', 'email', userEmail);
-    if ( validation ) {
+    if (Object.keys(validation).length) {
+      return true;
+    } else {
       return false;
-    };
-    return true;
-  };
+    }
+  }
 }
