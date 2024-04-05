@@ -4,6 +4,7 @@ import config from '../../../../config';
 import logger from '../../../shared/services/logger/logger.service';
 import { User } from '../../user/domain/models/user';
 import { Session } from '../domain/models/session';
+import { SessionDataRequest } from '../domain/models/sessionDataRequest';
 import { SessionMapper } from '../mapper/session.mapper';
 
 export class SessionService{
@@ -25,9 +26,13 @@ export class SessionService{
     }
     return sessionId;
   }
+  // Obsolete
+  // async retrieveSessionPermissions(sessionId: string): Promise<[]>{
+  //   return await this.sessionMapper.retrieveSessionIdPermissions(sessionId);
+  // }
 
-  async retrieveSessionIdPermissions(sessionId: string): Promise<[]>{
-    return await this.sessionMapper.retrieveSessionIdPermissions(sessionId);
+  async retrieveSessionData(sessionId: string): Promise<SessionDataRequest>{
+    return await this.sessionMapper.retrieveSessionData(sessionId);
   }
 
 

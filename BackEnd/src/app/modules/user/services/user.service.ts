@@ -96,6 +96,7 @@ export class UserService {
         this.responseMessage = { status: 'fail', data: 'Wrong email ' };
         return this.responseMessage;
       }
+      //add logic if the user is blocked
       sessionCookie = await sessionService.createSession(checkUser[0]);
     } catch (error) {
       logger.debug('user.service ---> login error', error);

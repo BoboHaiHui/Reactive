@@ -25,6 +25,9 @@ async function login(req, res) {
   try {
     responseMessage = await userService.login(rawLoginData);
     if (responseMessage.status === 'success') {
+      const sessionId = responseMessage.data;
+      res.cookie('sessionId', sessionId, {domain: 'localhost', httpOnly: true});
+      responseMessage.data = null;
       res.status(201).json(responseMessage);
     } else {
       res.status(422).json(responseMessage);
@@ -35,6 +38,7 @@ async function login(req, res) {
   }
 }
 
+//not needed here
 async function retrieveAll(req, res) {
   const tableName = 'users';
   let getAllUsers: User[];
@@ -50,6 +54,7 @@ async function retrieveAll(req, res) {
   }
 }
 
+//not needed here
 async function retrieveOne(req, res) {
   const tableName = 'users';
   const rawData: IRetrieveOneInput = req.body;
@@ -66,7 +71,8 @@ async function retrieveOne(req, res) {
   }
 }
 
-async function update(req, res) {
+
+async function updateMyAccount(req, res) {
   const tableName = 'users';
   const userModel: User = req.body;
   let insertedUser: User;
@@ -87,5 +93,5 @@ export const userController = {
   login: login,
   retrieveAll: retrieveAll,
   retrieveOne: retrieveOne,
-  update: update,
+  updateMyAccount: updateMyAccount,
 };

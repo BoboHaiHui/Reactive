@@ -5,7 +5,7 @@ import logger from '../services/logger/logger.service';
 
 function checkPermissions(permission: string) {
   return function(req: Request, res: Response, next: NextFunction) {
-    const userPermissions = req.permissions;
+    const userPermissions = req.sessionData[0].permissions;
     let responseMessage: IResponceMessage;
     try {
       if (userPermissions && userPermissions.includes(permission)) {

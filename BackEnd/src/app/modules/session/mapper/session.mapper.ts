@@ -1,9 +1,8 @@
-import { table } from 'console';
-
 import { BaseMapper } from '../../../shared/mapper/base.mapper';
 import { IDBConnection } from '../../../shared/services/DB/DBConnection.interface';
 import logger from '../../../shared/services/logger/logger.service';
 import { Session } from '../domain/models/session';
+import { SessionDataRequest } from '../domain/models/sessionDataRequest';
 
 export class SessionMapper extends BaseMapper< Session >{
   constructor(protected dbConnection: IDBConnection) {
@@ -24,31 +23,45 @@ export class SessionMapper extends BaseMapper< Session >{
     }
   }
 
-  async retrieveSessionIdData(sessionId:string): Promise<Session>{
+  async retrieveSessionData(sessionId:string): Promise<any>{
     const tableName = 'sessions';
     const columnName = 'sessionId';
+    let sessionData: SessionDataRequest ={
+      sessionId : '',
+      userId: null,
+      sessionExpiration: null,
+      idleExpiration: null,
+      userRole: null,
+      permissions: []
+    };
+
     try{
-      return await this.retrieveOne(tableName, columnName, sessionId)
+      sessionData = await this.retrieveOne(tableName, columnName, sessionId);
+      sessionData[0].permissions = await this.retrievePermissionByRole(sessionData[0].userRole);
+      return sessionData;
     }catch(error){
       logger.critical(error, {description:'session.mapper --> retrieve session data error', securityFlag:false, severity:7})
       throw error;
     }
   }
 
-  async retrievePermissionByRole(role:number): Promise<any>{
+  async retrievePermissionByRole(role:number): Promise<string[]>{
     const tableName = 'roles';
     const columnName = 'id';
     try{
-      return await this.retrieveOne(tableName, columnName, role);
+      let roleData = await this.retrieveOne(tableName, columnName, role);
+      return roleData[0].permissions;
     }catch(error){
       logger.critical(error, {description:'session.mapper --> create permissions error', securityFlag:false, severity:7})
       throw error;
     }
   }
 
-  async retrieveSessionIdPermissions(sessionId:string): Promise<[]>{
-    const sessionIdData:Session = await this.retrieveSessionIdData(sessionId);
-    const permissions = await this.retrievePermissionByRole(sessionIdData[0].userRole)
-    return permissions[0].permissions;
-  }
+  // Obsolete
+  // async retrieveSessionIdPermissions(sessionId:string): Promise<[]>{
+  //   const sessionIdData:Session = await this.retrieveSessionData(sessionId);
+  //   const permissions = await this.retrievePermissionByRole(sessionIdData[0].userRole)
+
+  //   return permissions[0].permissions;
+  // }
 }

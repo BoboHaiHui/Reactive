@@ -18,6 +18,6 @@ userRoutes.route('/retrieveOne')
   .get( userController.retrieveOne )
 
 userRoutes.route('/update')
-  .patch( userController.update )
+  .patch( checkPermissions('CreateUser'), userController.updateMyAccount )
 
 export default userRoutes;
