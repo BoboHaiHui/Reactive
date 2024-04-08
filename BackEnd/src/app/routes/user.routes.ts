@@ -11,13 +11,13 @@ userRoutes.route('/register')
 userRoutes.route('/login')
   .post( userController.login )
 
-userRoutes.route('/retrieveAll')
-  .get( userController.retrieveAll )
+// userRoutes.route('/retrieveAll')
+//   .get( userController.retrieveAll )
 
-userRoutes.route('/retrieveOne')
-  .get( userController.retrieveOne )
+// userRoutes.route('/retrieveOne')
+//   .get( userController.retrieveOne )
 
-userRoutes.route('/update')
-  .patch( checkPermissions('CreateUser'), userController.updateMyAccount )
+userRoutes.route('/updateMyUser')
+  .patch( checkPermissions('UpdateMyUser'), userController.updateMyAccount )
 
 export default userRoutes;
