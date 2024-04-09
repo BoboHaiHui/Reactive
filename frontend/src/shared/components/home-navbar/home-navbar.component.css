@@ -1,0 +1,10 @@
+.home-navbar-content{
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+};
+
+.logo a {
+  text-decoration: none;
+}

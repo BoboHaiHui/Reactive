@@ -1,19 +1,23 @@
+
+import { ContactComponent } from 'src/general-pages/contact/contact.component';
 import { HomeComponent } from 'src/general-pages/home/home.component';
-import { NavbarComponent } from 'src/shared/components/navbar/navbar.component';
+import { LoginComponent } from 'src/general-pages/login/login.component';
+import { RegisterComponent } from 'src/general-pages/register/register.component';
 
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  {path: '', component:NavbarComponent, children: [
-    {path: 'home', component: HomeComponent},
-    // {path: 'login', component: LoginComponent},
-    // {path: 'register', component: RegisterComponent},
-  ]}
+  {path: '', component:HomeComponent, children: [
+    {path: 'login', component: LoginComponent},
+    {path: 'register', component: RegisterComponent},
+  ]},
+  {path: 'contact', component:ContactComponent}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: []
 })
-export class AppRoutingModule { }
+export class AppRouteModule { }
