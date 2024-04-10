@@ -8,6 +8,7 @@ import { FooterComponent } from 'src/shared/components/footer/footer.component';
 import { HomeNavbarComponent } from 'src/shared/components/home-navbar/home-navbar.component';
 import { ProfileService } from 'src/shared/services/profile.service';
 
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -32,6 +33,7 @@ import { AppComponent } from './app.component';
     AppRouteModule,
     AngularMaterialModule,
     ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [ProfileService],
   bootstrap: [AppComponent]

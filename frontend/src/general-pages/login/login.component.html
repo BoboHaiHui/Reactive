@@ -1,11 +1,27 @@
-<div class="login-content">
+<div class="login-container">
   <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
-    <label for="email"> Email </label><br>
-    <input type="text" id="email" placeholder=" JohnDoe@domaine.name" formControlName="email">
-    <br><br>
-    <label for="pass"> Password </label><br>
-    <input type="text" id="pass" placeholder=" ****** " formControlName="password">
-    <br><br>
-    <input type="submit" value="Login" id="btn">
+    <label for="email"> Email </label><br />
+    <input
+      type="text"
+      id="email"
+      placeholder=" JohnDoe@domaine.name"
+      formControlName="email"
+    />
+    <br /><br />
+    <label for="pass"> Password </label><br />
+    <input
+      type="text"
+      id="pass"
+      placeholder=" ****** "
+      formControlName="password"
+    />
+    <br /><br />
+    <input type="submit" value="Login" id="btn" />
   </form>
+  <div class="register-link">
+    <br />
+    <p>
+      <a routerLink="/register">Don't have an account? Click to register</a>
+    </p>
+  </div>
 </div>

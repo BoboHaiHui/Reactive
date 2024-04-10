@@ -1,10 +1,18 @@
-.home-navbar-content{
-  padding: 10px;
+:host {
+  width: 100%;
+}
+
+.home-navbar-content {
+  padding: 24px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-};
+  margin: 0 10%;
+}
 
 .logo a {
   text-decoration: none;
+  font-family: fantasy;
+  font-size: 24px;
+  color: navy;
 }

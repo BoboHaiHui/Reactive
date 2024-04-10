@@ -5,12 +5,12 @@ import config from '../../../../config';
 import { sessionService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import { utils } from '../../../shared/utils/validations';
-import { ILoginInput, IRegisterInput, IResponceMessage } from '../domain/interface/input/userRegisterInput.interface';
+import { ILoginInput, ILoginOutput, IRegisterInput, IResponceMessage } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 import { UserMapper } from '../mapper/user.mapper';
 
 export class UserService {
-  private responseMessage: IResponceMessage;
+  private responseMessage: IResponceMessage | ILoginOutput;
 
   constructor(private userMapper: UserMapper) {}
 
@@ -28,7 +28,7 @@ export class UserService {
     };
     let emailInUse: boolean;
 
-    if (!(rawRegisterData.firstname && rawRegisterData.lastname && rawRegisterData.email && rawRegisterData.password)) {
+    if (!(rawRegisterData.firstName && rawRegisterData.lastName && rawRegisterData.email && rawRegisterData.password)) {
       this.responseMessage = { status: 'fail', data: 'All fileds are mandatory' };
       return this.responseMessage;
     }
@@ -36,7 +36,7 @@ export class UserService {
       this.responseMessage = { status: 'fail', data: 'Please agree our terms and conditions' };
       return this.responseMessage;
     }
-    if (rawRegisterData.firstname.length > 20 || rawRegisterData.lastname.length > 20) {
+    if (rawRegisterData.firstName.length > 20 || rawRegisterData.lastName.length > 20) {
       this.responseMessage = { status: 'fail', data: 'Max number of characters is 20' };
       return this.responseMessage;
     }
@@ -56,8 +56,8 @@ export class UserService {
     }
 
     try {
-      registerData.firstName = rawRegisterData.firstname;
-      registerData.lastName = rawRegisterData.lastname;
+      registerData.firstName = rawRegisterData.firstName;
+      registerData.lastName = rawRegisterData.lastName;
       registerData.email = rawRegisterData.email;
       registerData.activation_code = randomBytes(config.user.activationCodeLength).toString('hex');
       registerData.password = await bcrypt.hash(rawRegisterData.password + config.user.password_sufix, 10);
@@ -75,8 +75,8 @@ export class UserService {
     }
   }
 
-  async login(rawLoginData: ILoginInput): Promise<IResponceMessage> {
-    const tableName = 'users';
+  async login(rawLoginData: ILoginInput): Promise<ILoginOutput> {
+    let checkUser: User;
     let sessionCookie: string;
     if (!utils.emailValidator(rawLoginData.email)) {
       this.responseMessage = { status: 'fail', data: 'Not a valid email address' };
@@ -87,13 +87,13 @@ export class UserService {
       return this.responseMessage;
     }
     try {
-      const checkUser = await this.userMapper.retrieveOne('users', 'email', rawLoginData.email);
+      checkUser = await this.userMapper.retrieveOne('users', 'email', rawLoginData.email);
       if (!Object.keys(checkUser).length) {
         this.responseMessage = { status: 'fail', data: 'Wrong email or password' };
         return this.responseMessage;
       }
       if (!(await bcrypt.compare(rawLoginData.password + config.user.password_sufix, checkUser[0].password))) {
-        this.responseMessage = { status: 'fail', data: 'Wrong email ' };
+        this.responseMessage = { status: 'fail', data: 'Wrong email or password' };
         return this.responseMessage;
       }
       //add logic if the user is blocked
@@ -102,7 +102,11 @@ export class UserService {
       logger.debug('user.service ---> login error', error);
       throw error();
     }
-    this.responseMessage = { status: 'success', data: sessionCookie };
+    this.responseMessage = {
+      status: 'success',
+      data: sessionCookie,
+      userData: { firstName: checkUser[0].firstName, lastName: checkUser[0].lastName, email: checkUser[0].email, roleId: checkUser[0].roleId },
+    };
     return this.responseMessage;
   }
 

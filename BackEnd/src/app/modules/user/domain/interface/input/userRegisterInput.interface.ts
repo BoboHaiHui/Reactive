@@ -1,26 +1,37 @@
-export interface IRegisterInput{
-  firstname: string,
-  lastname: string,
-  email: string,
-  password: string,
-  terms: boolean
+export interface IRegisterInput {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  terms: boolean;
 }
 
-export interface IRetrieveOneInput{
-  field: Field['value'],
-  value: string | number
+export interface IRetrieveOneInput {
+  field: Field['value'];
+  value: string | number;
 }
 
-export interface ILoginInput{
-  email: string,
-  password: string
+export interface ILoginInput {
+  email: string;
+  password: string;
 }
 
-export interface IResponceMessage{
-  status: string,
-  data: any
+export interface IResponceMessage {
+  status: string;
+  data: any;
 }
 
-interface Field{
-  value: "firstName" | "lastName" | "email";
+export interface ILoginOutput {
+  status: string;
+  data: string;
+  userData?: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    roleId: number;
+  };
+}
+
+interface Field {
+  value: 'firstName' | 'lastName' | 'email';
 }

@@ -11,8 +11,9 @@ userRoutes.route('/register')
 userRoutes.route('/login')
   .post( userController.login )
 
-// userRoutes.route('/retrieveAll')
-//   .get( userController.retrieveAll )
+  //erase this endpoint!!!!!!
+userRoutes.route('/retrieveAll')
+  .get( userController.retrieveAll )
 
 // userRoutes.route('/retrieveOne')
 //   .get( userController.retrieveOne )

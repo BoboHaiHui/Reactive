@@ -1,6 +1,8 @@
 import { userService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
-import { ILoginInput, IRegisterInput, IResponceMessage, IRetrieveOneInput } from '../domain/interface/input/userRegisterInput.interface';
+import {
+    ILoginInput, ILoginOutput, IRegisterInput, IResponceMessage, IRetrieveOneInput
+} from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 
 async function register(req, res) {
@@ -21,13 +23,13 @@ async function register(req, res) {
 
 async function login(req, res) {
   const rawLoginData: ILoginInput = req.body;
-  let responseMessage: IResponceMessage;
+  let responseMessage: ILoginOutput;
   try {
     responseMessage = await userService.login(rawLoginData);
     if (responseMessage.status === 'success') {
       const sessionId = responseMessage.data;
-      res.cookie('sessionId', sessionId, {domain: 'localhost', httpOnly: true});
-      responseMessage.data = null;
+      res.cookie('sessionId', sessionId, {domain: 'localhost', httpOnly: true, secure: true});
+      responseMessage.data = 'Login successful';
       res.status(201).json(responseMessage);
     } else {
       res.status(422).json(responseMessage);
@@ -38,7 +40,7 @@ async function login(req, res) {
   }
 }
 
-//not needed here
+//not needed here...it should be moved to admin controllers
 async function retrieveAll(req, res) {
   const tableName = 'users';
   let getAllUsers: User[];
@@ -54,7 +56,7 @@ async function retrieveAll(req, res) {
   }
 }
 
-//not needed here
+//not needed here..it should be moved to admin controllers
 async function retrieveOne(req, res) {
   const tableName = 'users';
   const rawData: IRetrieveOneInput = req.body;
