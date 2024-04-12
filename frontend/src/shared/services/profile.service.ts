@@ -7,26 +7,27 @@ import { ILoginData, IRegisterData } from './profile.service.interface';
 
 @Injectable()
 export class ProfileService {
-  constructor(private userProfileData: ProfileStore, private http: HttpClient, private router: Router) {}
+  constructor(private profileStore: ProfileStore, private http: HttpClient, private router: Router) {}
 
-  public login(url: string, loginData: ILoginData) {
-    const userCredentials = {
+  public async login(url: string, loginData: ILoginData): Promise<void> {
+    const userCredentials: ILoginData = {
       email: loginData.email,
       password: loginData.password
     };
     const options = { observe: 'response' as const, withCredentials: true };
-    this.http.post(url, userCredentials, options).subscribe(
-      (res: HttpResponse<any>) => {
-        if (res.status == 201) {
-          this.userProfileData.setUserProfileData(res.body?.userData);
-        } else {
-          console.log('Something went wrong. User was not been created');
-        }
-      },
-      err => {
-        throw console.error('Internal server error');
+    try {
+      const res: HttpResponse<any> = await this.http.post(url, userCredentials, options).toPromise();
+
+      if (res.status === 201) {
+        this.profileStore.setUserProfileData(res.body?.userData);
+        this.navigateToRoleMenu(this.profileStore.getUserProfileData().roleId);
+      } else {
+        console.log('Something went wrong.');
       }
-    );
+    } catch (error) {
+      console.error('Internal server error', error);
+      throw error;
+    }
   }
 
   public async register(url: string, registerData: IRegisterData): Promise<boolean> {
@@ -43,6 +44,37 @@ export class ProfileService {
     try {
       const res: HttpResponse<any> = await this.http.post(url, userRegisterData, options).toPromise();
       if (res.status == 201) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      console.error('Internal server error', err);
+      throw err;
+    }
+  }
+
+  navigateToRoleMenu(roleId: number) {
+    switch (roleId) {
+      case 1:
+        this.router.navigateByUrl('admin');
+        break;
+      case 2:
+        this.router.navigateByUrl('user');
+        break;
+      default:
+        this.router.navigateByUrl('');
+    }
+  }
+
+  async logout() {
+    const url = 'http://localhost:4000/user/logout';
+    const options = { observe: 'response' as const, withCredentials: true };
+
+    try {
+      const res: HttpResponse<any> = await this.http.get(url, options).toPromise();
+      if (res.status == 200) {
+        this.router.navigateByUrl('');
         return true;
       } else {
         return false;

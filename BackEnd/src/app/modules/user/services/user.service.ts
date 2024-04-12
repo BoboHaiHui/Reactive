@@ -24,7 +24,7 @@ export class UserService {
       password: '',
       roleId: config.user.defaultUserId,
       blocked: config.user.blocked,
-      activation_code: '',
+      activation_code: ''
     };
     let emailInUse: boolean;
 
@@ -105,8 +105,23 @@ export class UserService {
     this.responseMessage = {
       status: 'success',
       data: sessionCookie,
-      userData: { firstName: checkUser[0].firstName, lastName: checkUser[0].lastName, email: checkUser[0].email, roleId: checkUser[0].roleId },
+      userData: {
+        firstName: checkUser[0].firstName,
+        lastName: checkUser[0].lastName,
+        email: checkUser[0].email,
+        roleId: checkUser[0].roleId
+      }
     };
+    return this.responseMessage;
+  }
+
+  async logout(sessionId: string): Promise<IResponceMessage> {
+    try {
+      await sessionService.deleteSession(sessionId);
+    } catch (error) {
+      throw error;
+    }
+    this.responseMessage = { status: 'success', data: 'SessionId was deleted' };
     return this.responseMessage;
   }
 

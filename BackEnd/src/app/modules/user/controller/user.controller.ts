@@ -1,7 +1,11 @@
 import { userService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import {
-    ILoginInput, ILoginOutput, IRegisterInput, IResponceMessage, IRetrieveOneInput
+  ILoginInput,
+  ILoginOutput,
+  IRegisterInput,
+  IResponceMessage,
+  IRetrieveOneInput
 } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 
@@ -28,7 +32,7 @@ async function login(req, res) {
     responseMessage = await userService.login(rawLoginData);
     if (responseMessage.status === 'success') {
       const sessionId = responseMessage.data;
-      res.cookie('sessionId', sessionId, {domain: 'localhost', httpOnly: true, secure: true});
+      res.cookie('sessionId', sessionId, { domain: 'localhost', httpOnly: true, secure: true });
       responseMessage.data = 'Login successful';
       res.status(201).json(responseMessage);
     } else {
@@ -73,7 +77,6 @@ async function retrieveOne(req, res) {
   }
 }
 
-
 async function updateMyAccount(req, res) {
   const tableName = 'users';
   const userModel: User = req.body;
@@ -90,10 +93,22 @@ async function updateMyAccount(req, res) {
   }
 }
 
+async function logout(req, res) {
+  let responseMessage: IResponceMessage;
+  const sessionId: string = req.sessionData ? req.sessionData[0].sessionId : '';
+  if (sessionId) {
+    responseMessage = await userService.logout(sessionId);
+    return res.status(200).json(responseMessage);
+  } else {
+    return res.status(204).end();
+  }
+}
+
 export const userController = {
   register: register,
   login: login,
   retrieveAll: retrieveAll,
   retrieveOne: retrieveOne,
   updateMyAccount: updateMyAccount,
+  logout: logout
 };

@@ -3,16 +3,16 @@ import { Injectable } from '@angular/core';
 import { IProfileUserData } from './profileUserData.interface';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class ProfileStore {
   private userProfileData: IProfileUserData;
 
-  setUserProfileData(userData: any){
+  setUserProfileData(userData: IProfileUserData) {
     this.userProfileData = userData;
   }
 
-  getUserProfileData(){
+  getUserProfileData() {
     return this.userProfileData;
   }
 }

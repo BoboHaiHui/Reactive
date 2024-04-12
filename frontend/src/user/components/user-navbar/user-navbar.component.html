@@ -1,0 +1,10 @@
+<div class="home-navbar-content">
+  <div class="welcome-message">
+    <p>Welcome, {{ userName }}</p>
+  </div>
+  <div class="links">
+    <a mat-flat-button color="primary" routerLink="login">Tools</a>
+    <a mat-flat-button color="primary" routerLink="login">Profile</a>
+    <button mat-flat-button color="primary" (click)="logout()">Logout</button>
+  </div>
+</div>

@@ -26,16 +26,16 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  async onSubmit() {
     this.loginData = {
       email: this.reactiveForm.value.email,
       password: this.reactiveForm.value.password
     };
-    this.login();
+    await this.login();
   }
 
-  login() {
+  async login() {
     const url = 'http://localhost:4000/user/login';
-    this.profileService.login(url, this.loginData);
+    await this.profileService.login(url, this.loginData);
   }
 }

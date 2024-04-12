@@ -1,0 +1,9 @@
+.user-container {
+  background-image: url(../assets/backgrounds/user-background.jpg);
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
