@@ -47,9 +47,9 @@ async function login(req, res) {
 async function sendUserProfileData(req, res) {
   let responseMessage: IUserProfileData;
   try {
-    let userProfileData = await userService.sendUserProfileData(req);
-    if (userProfileData) {
-      return res.status(200).json({ data: userProfileData });
+    responseMessage = await userService.sendUserProfileData(req);
+    if (responseMessage) {
+      return res.status(200).json(responseMessage);
     } else {
       return res.status(401).json({ status: 'fail', data: 'Unauthorized access' });
     }

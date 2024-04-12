@@ -147,10 +147,18 @@ export class UserService {
   }
 
   async sendUserProfileData(req): Promise<IUserProfileData | null> {
-    let userProfileData: IUserProfileData;
     if (req.sessionData && req.sessionData[0] != null) {
-      userProfileData = req.sessionData[0];
-      return userProfileData;
+      this.responseMessage = {
+        status: 'success',
+        data: 'User profile data',
+        userData: {
+          firstName: req.sessionData[0].userFirstName,
+          lastName: req.sessionData[0].userLastName,
+          email: req.sessionData[0].userEmail,
+          roleId: req.sessionData[0].userRole
+        }
+      };
+      return this.responseMessage;
     } else {
       return null;
     }

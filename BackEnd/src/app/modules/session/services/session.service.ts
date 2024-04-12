@@ -18,6 +18,9 @@ export class SessionService {
     this.session.idleExpiration = Math.round(Date.now() / (1000 * 60) + config.session.idelExpiration * 60);
     this.session.userId = user.id;
     this.session.userRole = user.roleId;
+    this.session.userEmail = user.email;
+    this.session.userFirstName = user.firstName;
+    this.session.userLastName = user.lastName;
     try {
       this.sessionMapper.createSession(this.session);
     } catch (error) {

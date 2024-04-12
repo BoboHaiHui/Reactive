@@ -4,6 +4,9 @@ CREATE TABLE sessions (
     sessionExpiration INT,
     idleExpiration INT,
     userRole INT,
+    userEmail VARCHAR(255),
+    userFirstName VARCHAR(255),
+    userLastName VARCHAR(255),
     FOREIGN KEY (userId) REFERENCES users(id),
     FOREIGN KEY (userRole) REFERENCES roles(id)
 );
