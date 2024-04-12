@@ -1,0 +1,10 @@
+.error-page-container {
+  width: 420px;
+  background-color: gray;
+  border: 1px solid whitesmoke;
+  text-align: center;
+
+  position: relative;
+  top: 30%;
+  left: 40%;
+}

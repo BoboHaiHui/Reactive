@@ -5,12 +5,12 @@ import config from '../../../../config';
 import { sessionService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import { utils } from '../../../shared/utils/validations';
-import { ILoginInput, ILoginOutput, IRegisterInput, IResponceMessage } from '../domain/interface/input/userRegisterInput.interface';
+import { ILoginInput, IRegisterInput, IResponceMessage, IUserProfileData } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 import { UserMapper } from '../mapper/user.mapper';
 
 export class UserService {
-  private responseMessage: IResponceMessage | ILoginOutput;
+  private responseMessage: IResponceMessage | IUserProfileData;
 
   constructor(private userMapper: UserMapper) {}
 
@@ -75,7 +75,7 @@ export class UserService {
     }
   }
 
-  async login(rawLoginData: ILoginInput): Promise<ILoginOutput> {
+  async login(rawLoginData: ILoginInput): Promise<IUserProfileData> {
     let checkUser: User;
     let sessionCookie: string;
     if (!utils.emailValidator(rawLoginData.email)) {
@@ -143,6 +143,16 @@ export class UserService {
       return true;
     } else {
       return false;
+    }
+  }
+
+  async sendUserProfileData(req): Promise<IUserProfileData | null> {
+    let userProfileData: IUserProfileData;
+    if (req.sessionData && req.sessionData[0] != null) {
+      userProfileData = req.sessionData[0];
+      return userProfileData;
+    } else {
+      return null;
     }
   }
 }

@@ -4,9 +4,9 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 
+import { UserNavbarComponent } from './components/user-navbar/user-navbar.component';
 import { UserService } from './services/user.service';
 import { UserComponent } from './user.component';
-import { UserNavbarComponent } from './components/user-navbar/user-navbar.component';
 
 @NgModule({
   imports: [AngularMaterialModule, HttpClientModule, CommonModule],

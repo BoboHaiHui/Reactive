@@ -21,7 +21,7 @@ export interface IResponceMessage {
   data: any;
 }
 
-export interface ILoginOutput {
+export interface IUserProfileData {
   status: string;
   data: string;
   userData?: {

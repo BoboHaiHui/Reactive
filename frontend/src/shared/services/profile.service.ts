@@ -84,4 +84,13 @@ export class ProfileService {
       throw err;
     }
   }
+
+  isUser() {
+    console.log(this.profileStore.getUserProfileData());
+    if (this.profileStore.getUserProfileData().roleId === 2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

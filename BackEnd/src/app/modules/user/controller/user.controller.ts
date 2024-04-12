@@ -2,10 +2,10 @@ import { userService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import {
   ILoginInput,
-  ILoginOutput,
   IRegisterInput,
   IResponceMessage,
-  IRetrieveOneInput
+  IRetrieveOneInput,
+  IUserProfileData
 } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 
@@ -27,7 +27,7 @@ async function register(req, res) {
 
 async function login(req, res) {
   const rawLoginData: ILoginInput = req.body;
-  let responseMessage: ILoginOutput;
+  let responseMessage: IUserProfileData;
   try {
     responseMessage = await userService.login(rawLoginData);
     if (responseMessage.status === 'success') {
@@ -41,6 +41,21 @@ async function login(req, res) {
   } catch (error) {
     logger.error(error.message, { description: 'login error', securityFlag: true, severity: 7 });
     res.status(500).json({ status: 'fail', data: null });
+  }
+}
+
+async function sendUserProfileData(req, res) {
+  let responseMessage: IUserProfileData;
+  try {
+    let userProfileData = await userService.sendUserProfileData(req);
+    if (userProfileData) {
+      return res.status(200).json({ data: userProfileData });
+    } else {
+      return res.status(401).json({ status: 'fail', data: 'Unauthorized access' });
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ status: 'fail' });
   }
 }
 
@@ -110,5 +125,6 @@ export const userController = {
   retrieveAll: retrieveAll,
   retrieveOne: retrieveOne,
   updateMyAccount: updateMyAccount,
-  logout: logout
+  logout: logout,
+  sendUserProfileData: sendUserProfileData
 };
