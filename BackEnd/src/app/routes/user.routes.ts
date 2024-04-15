@@ -11,7 +11,7 @@ userRoutes.route('/login').post(userController.login);
 
 userRoutes.route('/logout').get(userController.logout);
 
-userRoutes.route('/userProfileData').post(userController.sendUserProfileData);
+userRoutes.route('/profileUserData').get(userController.sendUserProfileData);
 
 //erase this endpoint!!!!!!
 userRoutes.route('/retrieveAll').get(userController.retrieveAll);

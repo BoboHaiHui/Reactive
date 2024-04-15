@@ -4,6 +4,7 @@ import { ErrorPageComponent } from 'src/general-pages/error-page/error-page.comp
 import { HomeComponent } from 'src/general-pages/home/home.component';
 import { LoginComponent } from 'src/general-pages/login/login.component';
 import { RegisterComponent } from 'src/general-pages/register/register.component';
+import { userCanActivate } from 'src/shared/guards/auth-guards';
 import { UserComponent } from 'src/user/user.component';
 
 import { NgModule } from '@angular/core';
@@ -19,7 +20,12 @@ const routes: Routes = [
     ]
   },
   { path: 'contact', component: ContactComponent },
-  { path: 'user', component: UserComponent },
+  {
+    path: 'user',
+    component: UserComponent,
+    canActivate: [userCanActivate],
+    runGuardsAndResolvers: 'always'
+  },
   {
     path: 'admin',
     component: AdminComponent

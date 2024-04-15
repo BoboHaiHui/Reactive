@@ -1,3 +1,4 @@
+import { ProfileService } from 'src/shared/services/profile.service';
 import { ProfileStore } from 'src/shared/stores/profileUserData.store';
 
 import { Component } from '@angular/core';
@@ -8,9 +9,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  constructor(private profileStore: ProfileStore) {}
-
-  showUser() {
-    console.log(this.profileStore);
-  }
+  constructor(private profileStore: ProfileStore, private profileService: ProfileService) {}
 }

@@ -3,8 +3,8 @@
     <p>Welcome, {{ userData.firstName }}</p>
   </div>
   <div class="links">
-    <a mat-flat-button color="primary" href="/">Home</a>
-    <button mat-flat-button color="primary" (click)="showUser()">Profile</button>
+    <a mat-flat-button color="primary" routerLink="/">Home</a>
+    <button mat-flat-button color="primary">Profile</button>
     <button mat-flat-button color="primary" (click)="logout()">Logout</button>
   </div>
 </div>

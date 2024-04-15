@@ -2,6 +2,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { IProfileUserData } from '../stores/profileUserData.interface';
 import { ProfileStore } from '../stores/profileUserData.store';
 import { ILoginData, IRegisterData } from './profile.service.interface';
 
@@ -54,6 +55,29 @@ export class ProfileService {
     }
   }
 
+  public async requestProfileUserData() {
+    const url: string = 'http://localhost:4000/user/profileUserData';
+    const options = { observe: 'response' as const, withCredentials: true };
+    let profileUserData = this.profileStore.getUserProfileData();
+    if (profileUserData) {
+      return profileUserData;
+    } else {
+      try {
+        const res: HttpResponse<any> = await this.http.get(url, options).toPromise();
+        if (res.status == 200) {
+          profileUserData = res.body?.userData;
+          this.profileStore.setUserProfileData(profileUserData);
+          return profileUserData;
+        } else {
+          return null;
+        }
+      } catch (err) {
+        console.error('Internal server error', err);
+        throw err;
+      }
+    }
+  }
+
   navigateToRoleMenu(roleId: number) {
     switch (roleId) {
       case 1:
@@ -70,7 +94,7 @@ export class ProfileService {
   async logout() {
     const url = 'http://localhost:4000/user/logout';
     const options = { observe: 'response' as const, withCredentials: true };
-
+    this.profileStore.setUserProfileData(null);
     try {
       const res: HttpResponse<any> = await this.http.get(url, options).toPromise();
       if (res.status == 200) {
@@ -85,9 +109,8 @@ export class ProfileService {
     }
   }
 
-  isUser() {
-    console.log(this.profileStore.getUserProfileData());
-    if (this.profileStore.getUserProfileData().roleId === 2) {
+  isUser(profileUserData: IProfileUserData) {
+    if (profileUserData?.roleId == 2) {
       return true;
     } else {
       return false;

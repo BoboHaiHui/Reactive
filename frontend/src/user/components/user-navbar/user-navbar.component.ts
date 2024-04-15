@@ -20,9 +20,4 @@ export class UserNavbarComponent implements OnInit {
   async logout() {
     await this.profileService.logout();
   }
-
-  showUser() {
-    console.log('UserData', this.userData);
-    console.log('ProfileData', this.profileStore);
-  }
 }
