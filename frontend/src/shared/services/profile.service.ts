@@ -116,4 +116,12 @@ export class ProfileService {
       return false;
     }
   }
+
+  isAdmin(profileUserData: IProfileUserData) {
+    if (profileUserData?.roleId == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

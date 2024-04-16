@@ -3,15 +3,16 @@ import { Router } from '@angular/router';
 
 import { ProfileService } from '../services/profile.service';
 
-export const userCanActivate = async () => {
+const canActivateWithRole = async (roleChecker: (userData: any) => boolean) => {
   const router = inject(Router);
   const profileService = inject(ProfileService);
   try {
     const profileUserData = await profileService.requestProfileUserData();
     if (!profileUserData) {
       router.navigate(['login']);
+      return false;
     }
-    if (profileService.isUser(profileUserData)) {
+    if (roleChecker(profileUserData)) {
       return true;
     } else {
       router.navigate(['login']);
@@ -21,4 +22,14 @@ export const userCanActivate = async () => {
     router.navigate(['login']);
     return false;
   }
+};
+
+export const canActivateUser = async () => {
+  const profileService = inject(ProfileService);
+  return await canActivateWithRole(profileService.isUser);
+};
+
+export const canActivateAdmin = async () => {
+  const profileService = inject(ProfileService);
+  return await canActivateWithRole(profileService.isAdmin);
 };

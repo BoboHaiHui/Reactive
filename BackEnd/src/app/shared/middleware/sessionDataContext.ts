@@ -11,12 +11,8 @@ async function addSessionDataContext(req: Request, res: Response, next: NextFunc
       const exists = await sessionService.sessionExists(sessionId);
       if (exists) {
         const sessionData: SessionDataRequest = await sessionService.retrieveSessionData(sessionId);
-        if (sessionData.sessionExpiration < Date.now() / 60000) {
-          req.sessionData = sessionData;
-          next();
-        } else {
-          return res.status(401).json({ status: 'fail', data: 'Session expired. Please log in again.' });
-        }
+        req.sessionData = sessionData;
+        next();
       } else {
         next();
       }

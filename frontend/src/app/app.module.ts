@@ -8,7 +8,6 @@ import { AngularMaterialModule } from 'src/shared/angularMaterial.module';
 import { FooterComponent } from 'src/shared/components/footer/footer.component';
 import { HomeNavbarComponent } from 'src/shared/components/home-navbar/home-navbar.component';
 import { ProfileService } from 'src/shared/services/profile.service';
-import { UserModule } from 'src/user/user.module';
 
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
@@ -39,7 +38,6 @@ import { AppComponent } from './app.component';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
-    UserModule,
     AdminModule
   ],
   providers: [ProfileService],
