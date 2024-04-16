@@ -7,10 +7,14 @@ import { RouterModule } from '@angular/router';
 
 import { AdminRoutes } from './admin-routing';
 import { AdminComponent } from './admin.component';
+import { AdminNavbarComponent } from './components/admin-navbar/admin-navbar.component';
+import { UsersComponent } from './components/users/users.component';
+import { RolesComponent } from './components/roles/roles.component';
+import { SettingsComponent } from './components/settings/settings.component';
 
 @NgModule({
   imports: [HttpClientModule, CommonModule, AngularMaterialModule, RouterModule.forChild(AdminRoutes)],
   exports: [],
-  declarations: [AdminComponent]
+  declarations: [AdminComponent, AdminNavbarComponent, UsersComponent, RolesComponent, SettingsComponent]
 })
 export class AdminModule {}

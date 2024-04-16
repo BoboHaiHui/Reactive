@@ -1,0 +1,16 @@
+<div class="admin-navbar-content">
+  <div class="logo">
+    <p>Application Logo</p>
+  </div>
+  <div class="links">
+    <!-- <a mat-flat-button color="primary" routerLink="/">Home</a> -->
+    <!-- <button mat-flat-button color="primary" routerLink="profile">Profile</button> -->
+    <button mat-flat-button color="primary" routerLink="users">Users</button>
+    <button mat-flat-button color="primary" routerLink="roles">Roles</button>
+    <button mat-flat-button color="primary" [matMenuTriggerFor]="admin">{{ userData.email }}</button>
+    <mat-menu #admin="matMenu">
+      <button mat-menu-item routerLink="settings">Settings</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
+  </div>
+</div>

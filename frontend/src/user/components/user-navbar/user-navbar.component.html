@@ -1,10 +1,16 @@
-<div class="home-navbar-content">
-  <div class="welcome-message">
-    <p>Welcome, {{ userData.firstName }}</p>
+<div class="user-navbar-content">
+  <div class="logo">
+    <p>Application Logo</p>
   </div>
   <div class="links">
-    <a mat-flat-button color="primary" routerLink="/">Home</a>
-    <button mat-flat-button color="primary" routerLink="profile">Profile</button>
-    <button mat-flat-button color="primary" (click)="logout()">Logout</button>
+    <!-- <a mat-flat-button color="primary" routerLink="/">Home</a> -->
+    <!-- <button mat-flat-button color="primary" routerLink="profile">Profile</button> -->
+    <button mat-flat-button color="primary" routerLink="articles">Articles</button>
+    <button mat-flat-button color="primary" routerLink="tools">Tools</button>
+    <button mat-flat-button color="primary" [matMenuTriggerFor]="user">{{ userData.email }}</button>
+    <mat-menu #user="matMenu">
+      <button mat-menu-item routerLink="profile">Profile</button>
+      <button mat-menu-item (click)="logout()">Logout</button>
+    </mat-menu>
   </div>
 </div>
