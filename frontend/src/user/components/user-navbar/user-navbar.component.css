@@ -3,11 +3,11 @@
 }
 
 .user-navbar-content {
-  padding: 24px;
+  padding: 24px 5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 10%;
+  border-bottom: solid 3px navy;
 }
 
 .links {

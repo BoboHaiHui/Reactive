@@ -3,11 +3,12 @@
 }
 
 .admin-navbar-content {
-  padding: 24px;
+  padding: 24px 5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0 10%;
+  background-color: rgb(176, 170, 167);
+  border-bottom: solid 3px navy;
 }
 
 .links {

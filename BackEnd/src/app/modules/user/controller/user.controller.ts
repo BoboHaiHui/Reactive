@@ -1,12 +1,6 @@
 import { userService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
-import {
-  ILoginInput,
-  IRegisterInput,
-  IResponceMessage,
-  IRetrieveOneInput,
-  IUserProfileData
-} from '../domain/interface/input/userRegisterInput.interface';
+import { ILoginInput, IRegisterInput, IResponceMessage, IUserProfileData } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 
 async function register(req, res) {
@@ -59,39 +53,6 @@ async function sendUserProfileData(req, res) {
   }
 }
 
-//not needed here...it should be moved to admin controllers
-async function retrieveAll(req, res) {
-  const tableName = 'users';
-  let getAllUsers: User[];
-  try {
-    getAllUsers = await userService.retrieveAll(tableName);
-  } catch (error) {
-    logger.error(error, { description: 'RetrieveAll error', securityFlag: false, severity: 5 });
-  }
-  if (getAllUsers) {
-    res.status(201).json({ status: 'success', data: getAllUsers });
-  } else {
-    res.status(500).json({ status: 'fail', data: null });
-  }
-}
-
-//not needed here..it should be moved to admin controllers
-async function retrieveOne(req, res) {
-  const tableName = 'users';
-  const rawData: IRetrieveOneInput = req.body;
-  let getUser: User;
-  try {
-    getUser = await userService.retrieveOne(tableName, req.body.field, req.body.value);
-  } catch (error) {
-    logger.error(error, { description: 'RetrieveAll error', securityFlag: false, severity: 5 });
-  }
-  if (Array.isArray(getUser) && getUser.length > 0) {
-    res.status(201).json({ status: 'success', data: getUser });
-  } else {
-    res.status(500).json({ status: 'fail', data: null });
-  }
-}
-
 async function updateMyAccount(req, res) {
   const tableName = 'users';
   const userModel: User = req.body;
@@ -122,8 +83,6 @@ async function logout(req, res) {
 export const userController = {
   register: register,
   login: login,
-  retrieveAll: retrieveAll,
-  retrieveOne: retrieveOne,
   updateMyAccount: updateMyAccount,
   logout: logout,
   sendUserProfileData: sendUserProfileData

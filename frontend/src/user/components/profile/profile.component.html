@@ -1,1 +1,14 @@
-<p>profile works!</p>
+<div class="profile-container">
+  <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
+    <label for="firstName"> FirstName </label><br />
+    <input type="text" id="firstname" placeholder=" John" formControlName="firstName" />
+    <br /><br />
+    <label for="lastName"> LastName </label><br />
+    <input type="text" id="lastname" placeholder=" Doe" formControlName="lastName" />
+    <br /><br />
+    <label for="pass"> Password </label><br />
+    <input type="text" id="pass" placeholder=" ****** " formControlName="password" />
+    <br /><br />
+    <input type="submit" value="Save changes" id="btn" />
+  </form>
+</div>

@@ -13,12 +13,6 @@ userRoutes.route('/logout').get(userController.logout);
 
 userRoutes.route('/profileUserData').get(userController.sendUserProfileData);
 
-//erase this endpoint!!!!!!
-userRoutes.route('/retrieveAll').get(userController.retrieveAll);
-
-// userRoutes.route('/retrieveOne')
-//   .get( userController.retrieveOne )
-
 userRoutes.route('/updateMyUser').patch(checkPermissions('UpdateMyUser'), userController.updateMyAccount);
 
 export default userRoutes;

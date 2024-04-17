@@ -125,14 +125,6 @@ export class UserService {
     return this.responseMessage;
   }
 
-  async retrieveAll(tableName: string): Promise<User[]> {
-    return await this.userMapper.retrieveAll(tableName);
-  }
-
-  async retrieveOne(tableName: string, field: string, value: string | number): Promise<User> {
-    return (await this.userMapper.retrieveOne(tableName, field, value)) as any;
-  }
-
   async update(tableName: string, userData: User, field: string, value: string | number): Promise<User> {
     return await this.userMapper.update(tableName, userData, field, value);
   }

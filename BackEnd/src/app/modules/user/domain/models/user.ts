@@ -7,6 +7,6 @@ export class User implements IUser {
   email: string;
   password: string;
   roleId: number;
-  blocked: Boolean;
+  blocked: boolean;
   activation_code: string;
 }
