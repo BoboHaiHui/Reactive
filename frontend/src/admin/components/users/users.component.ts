@@ -1,6 +1,7 @@
+import { IFullProfileUserData } from 'src/admin/interfaces/admin.interfaces';
 import { AdminService } from 'src/admin/services/admin.service';
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -10,21 +11,27 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.css']
 })
-export class UsersComponent implements OnInit {
-  dataSource: MatTableDataSource<any>;
+export class UsersComponent implements OnInit, AfterViewInit {
+  dataSource: MatTableDataSource<IFullProfileUserData>;
   displayedColumns: string[] = ['id', 'firstName', 'lastName', 'email', 'roleId', 'blocked'];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  public userList;
+  public userList: IFullProfileUserData[] = [];
   constructor(private adminService: AdminService) {}
 
   async ngOnInit(): Promise<void> {
     this.userList = await this.retrieveAll();
-    console.log('UserList', this.userList);
     this.dataSource = new MatTableDataSource(this.userList);
-    console.log('DataSource', this.dataSource);
+    console.log(this.dataSource);
+  }
+
+  async ngAfterViewInit() {
+    await this.ngOnInit();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    console.log('NgAfter', this.dataSource);
   }
 
   async retrieveAll() {
