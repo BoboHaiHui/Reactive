@@ -10,4 +10,8 @@ export class AdminMapper extends BaseMapper<any> {
   async retrieveAll(tableName: string): Promise<User[]> {
     return (await super.retrieveAll(tableName)) as User[];
   }
+
+  async deleteByID(tableName: string, field: string, value: number): Promise<boolean> {
+    return await super.delete(tableName, field, value);
+  }
 }

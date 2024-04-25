@@ -1,6 +1,7 @@
-export enum Permissions{
+export enum Permissions {
   CreateUser = 'CreateUser',
   RetrieveUser = 'RetrieveUser',
+  RetrieveAllUsers = 'RetrieveAllUsers',
   UpdateUser = 'UpdateUser',
   DeleteUser = 'DeleteUser',
   ActivateUser = 'ActivateUser',
@@ -10,5 +11,5 @@ export enum Permissions{
   CreateRole = 'CreateRole',
   RetrieveRole = 'RetrieveRole',
   UpdateRole = 'UpdateRole',
-  DeleteRole = 'DeleteRole',
+  DeleteRole = 'DeleteRole'
 }

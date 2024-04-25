@@ -1,8 +1,8 @@
 export interface IBaseMapper<TModel> {
-  create(tableName: string, model:TModel): Promise<TModel>;
-  retrieve(tableName:string, field: string, value: string|number): Promise<TModel[]>;
+  create(tableName: string, model: TModel): Promise<TModel>;
+  retrieve(tableName: string, field: string, value: string | number): Promise<TModel[]>;
   retrieveAll(tableName: string): Promise<TModel[]>;
-  retrieveOne(tableName: string, field: string, value:string|number): Promise<TModel>;
-  update(tableName: string, model:TModel, field: string, value: string|number): Promise<TModel>;
-  delete(tableName: string, id:number): Promise<boolean>;
+  retrieveOne(tableName: string, field: string, value: string | number): Promise<TModel>;
+  update(tableName: string, model: TModel, field: string, value: string | number): Promise<TModel>;
+  delete(tableName: string, field: string, value: string | number): Promise<boolean>;
 }

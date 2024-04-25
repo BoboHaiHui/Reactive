@@ -110,7 +110,21 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
     }
   }
 
-  delete(tableName: string, id: number): Promise<boolean> {
-    throw new Error('Method not implemented.');
+  async delete(tableName: string, field: string, value: string | number): Promise<boolean> {
+    let connection;
+    try {
+      connection = await this.pool.getConnection();
+      const sql = 'DELETE FROM ?? WHERE ??=? ';
+      const inserts = [tableName, field, value];
+      const query = this.pool.format(sql, inserts);
+      const [rows, fields] = await connection.execute(query);
+      logger.debug(`${field} ${value} from ${tableName} was deleted `, rows);
+      return true;
+    } catch (error) {
+      logger.critical(error, { description: 'base.mapper-delete error', securityFlag: false, severity: 7 });
+      throw error;
+    } finally {
+      connection.release();
+    }
   }
 }

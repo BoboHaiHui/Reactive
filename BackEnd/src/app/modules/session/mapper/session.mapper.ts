@@ -24,11 +24,11 @@ export class SessionMapper extends BaseMapper<Session> {
     }
   }
 
-  async deleteSession(sessionId: string) {
+  async deleteSession(field: string, value: string | number) {
     let connection = await this.pool.getConnection();
     try {
-      const sql = 'DELETE FROM sessions WHERE sessionId=?';
-      const inserts = [sessionId];
+      const sql = 'DELETE FROM sessions WHERE ??=?';
+      const inserts = [field, value];
       const query = this.pool.format(sql, inserts);
       const [rows, fields] = await connection.execute(query);
       logger.debug('Inserted row:', rows);

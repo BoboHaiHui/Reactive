@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>User Data</h2>
+<mat-dialog-content>
+  <p>FirstName: {{ data.firstName }}</p>
+  <p>LastName: {{ data.lastName }}</p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="onSave()">Save</button>
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

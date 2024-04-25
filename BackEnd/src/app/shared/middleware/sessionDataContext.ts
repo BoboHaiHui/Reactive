@@ -18,7 +18,7 @@ async function addSessionDataContext(req: Request, res: Response, next: NextFunc
       }
     } catch (error) {
       logger.debug(error);
-      return res.status(500).json({ status: 'fail', data: 'Internal server error' });
+      return res.status(500).json({ statusText: 'fail', data: 'Internal server error' });
     }
   } else {
     next();

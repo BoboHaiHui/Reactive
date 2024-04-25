@@ -29,29 +29,29 @@ export class UserService {
     let emailInUse: boolean;
 
     if (!(rawRegisterData.firstName && rawRegisterData.lastName && rawRegisterData.email && rawRegisterData.password)) {
-      this.responseMessage = { status: 'fail', data: 'All fileds are mandatory' };
+      this.responseMessage = { statusText: 'fail', data: 'All fileds are mandatory' };
       return this.responseMessage;
     }
     if (!rawRegisterData.terms) {
-      this.responseMessage = { status: 'fail', data: 'Please agree our terms and conditions' };
+      this.responseMessage = { statusText: 'fail', data: 'Please agree our terms and conditions' };
       return this.responseMessage;
     }
     if (rawRegisterData.firstName.length > 20 || rawRegisterData.lastName.length > 20) {
-      this.responseMessage = { status: 'fail', data: 'Max number of characters is 20' };
+      this.responseMessage = { statusText: 'fail', data: 'Max number of characters is 20' };
       return this.responseMessage;
     }
     if (!utils.passwordValidator(rawRegisterData.password)) {
-      this.responseMessage = { status: 'fail', data: 'Password not strong enough' };
+      this.responseMessage = { statusText: 'fail', data: 'Password not strong enough' };
       return this.responseMessage;
     }
     if (!utils.emailValidator(rawRegisterData.email)) {
-      this.responseMessage = { status: 'fail', data: 'Not a valid email address' };
+      this.responseMessage = { statusText: 'fail', data: 'Not a valid email address' };
       return this.responseMessage;
     }
 
     emailInUse = await this.checkEmailExistance(rawRegisterData.email);
     if (emailInUse) {
-      this.responseMessage = { status: 'fail', data: 'E-mail already in use' };
+      this.responseMessage = { statusText: 'fail', data: 'E-mail already in use' };
       return this.responseMessage;
     }
 
@@ -64,10 +64,10 @@ export class UserService {
       mapperResponce = await this.userMapper.register(tableName, registerData);
 
       if (mapperResponce) {
-        this.responseMessage = { status: 'success', data: 'User was created' };
+        this.responseMessage = { statusText: 'success', data: 'User was created' };
         return this.responseMessage;
       } else {
-        this.responseMessage = { status: 'fail', data: null };
+        this.responseMessage = { statusText: 'fail', data: null };
         return this.responseMessage;
       }
     } catch (error) {
@@ -79,21 +79,21 @@ export class UserService {
     let checkUser: User;
     let sessionCookie: string;
     if (!utils.emailValidator(rawLoginData.email)) {
-      this.responseMessage = { status: 'fail', data: 'Not a valid email address' };
+      this.responseMessage = { statusText: 'fail', data: 'Not a valid email address' };
       return this.responseMessage;
     }
     if (!utils.passwordValidator(rawLoginData.password)) {
-      this.responseMessage = { status: 'fail', data: 'Password format is wrong' };
+      this.responseMessage = { statusText: 'fail', data: 'Password format is wrong' };
       return this.responseMessage;
     }
     try {
       checkUser = await this.userMapper.retrieveOne('users', 'email', rawLoginData.email);
       if (!Object.keys(checkUser).length) {
-        this.responseMessage = { status: 'fail', data: 'Wrong email or password' };
+        this.responseMessage = { statusText: 'fail', data: 'Wrong email or password' };
         return this.responseMessage;
       }
       if (!(await bcrypt.compare(rawLoginData.password + config.user.password_sufix, checkUser[0].password))) {
-        this.responseMessage = { status: 'fail', data: 'Wrong email or password' };
+        this.responseMessage = { statusText: 'fail', data: 'Wrong email or password' };
         return this.responseMessage;
       }
       //add logic if the user is blocked
@@ -103,7 +103,7 @@ export class UserService {
       throw error();
     }
     this.responseMessage = {
-      status: 'success',
+      statusText: 'success',
       data: sessionCookie,
       userData: {
         firstName: checkUser[0].firstName,
@@ -117,11 +117,11 @@ export class UserService {
 
   async logout(sessionId: string): Promise<IResponceMessage> {
     try {
-      await sessionService.deleteSession(sessionId);
+      await sessionService.deleteSessionById(sessionId);
     } catch (error) {
       throw error;
     }
-    this.responseMessage = { status: 'success', data: 'SessionId was deleted' };
+    this.responseMessage = { statusText: 'success', data: 'SessionId was deleted' };
     return this.responseMessage;
   }
 
@@ -141,7 +141,7 @@ export class UserService {
   async sendUserProfileData(req): Promise<IUserProfileData | null> {
     if (req.sessionData && req.sessionData[0] != null) {
       this.responseMessage = {
-        status: 'success',
+        statusText: 'success',
         data: 'User profile data',
         userData: {
           firstName: req.sessionData[0].userFirstName,

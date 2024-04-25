@@ -17,12 +17,12 @@ export interface ILoginInput {
 }
 
 export interface IResponceMessage {
-  status: string;
+  statusText: string;
   data: any;
 }
 
 export interface IUserProfileData {
-  status: string;
+  statusText: string;
   data: string;
   userData?: {
     firstName: string;
@@ -33,5 +33,5 @@ export interface IUserProfileData {
 }
 
 interface Field {
-  value: 'firstName' | 'lastName' | 'email';
+  value: 'firstName' | 'lastName' | 'email' | 'id';
 }

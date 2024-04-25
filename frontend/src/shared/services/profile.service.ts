@@ -101,6 +101,7 @@ export class ProfileService {
         this.router.navigateByUrl('');
         return true;
       } else {
+        //add banner - logout error! sessionId could still be active
         return false;
       }
     } catch (err) {

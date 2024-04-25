@@ -8,14 +8,14 @@ async function register(req, res) {
   let responseMessage: IResponceMessage;
   try {
     responseMessage = await userService.register(rawRegisterData);
-    if (responseMessage.status === 'success') {
+    if (responseMessage.statusText === 'success') {
       res.status(201).json(responseMessage);
     } else {
       res.status(422).json(responseMessage);
     }
   } catch (error) {
     logger.error(error.message, { description: 'register error', securityFlag: true, severity: 7 });
-    res.status(500).json({ status: 'fail', data: null });
+    res.status(500).json({ statusText: 'fail', data: null });
   }
 }
 
@@ -24,7 +24,7 @@ async function login(req, res) {
   let responseMessage: IUserProfileData;
   try {
     responseMessage = await userService.login(rawLoginData);
-    if (responseMessage.status === 'success') {
+    if (responseMessage.statusText === 'success') {
       const sessionId = responseMessage.data;
       res.cookie('sessionId', sessionId, { domain: 'localhost', httpOnly: true, secure: true });
       responseMessage.data = 'Login successful';
@@ -34,7 +34,7 @@ async function login(req, res) {
     }
   } catch (error) {
     logger.error(error.message, { description: 'login error', securityFlag: true, severity: 7 });
-    res.status(500).json({ status: 'fail', data: null });
+    res.status(500).json({ statusText: 'fail', data: null });
   }
 }
 
@@ -45,11 +45,11 @@ async function sendUserProfileData(req, res) {
     if (responseMessage) {
       return res.status(200).json(responseMessage);
     } else {
-      return res.status(401).json({ status: 'fail', data: 'Unauthorized access' });
+      return res.status(401).json({ statusText: 'fail', data: 'Unauthorized access' });
     }
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ status: 'fail' });
+    return res.status(500).json({ statusText: 'fail' });
   }
 }
 
@@ -63,9 +63,9 @@ async function updateMyAccount(req, res) {
     logger.error(error.message, { description: 'register error', securityFlag: true, severity: 7 });
   }
   if (insertedUser) {
-    res.status(201).json({ status: 'success', data: insertedUser });
+    res.status(201).json({ statusText: 'success', data: insertedUser });
   } else {
-    res.status(500).json({ status: 'fail', data: null });
+    res.status(500).json({ statusText: 'fail', data: null });
   }
 }
 

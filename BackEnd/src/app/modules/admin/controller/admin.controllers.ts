@@ -1,3 +1,5 @@
+import { response } from 'express';
+
 import { adminService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import { IRetrieveOneInput } from '../../user/domain/interface/input/userRegisterInput.interface';
@@ -35,7 +37,22 @@ async function retrieveOne(req, res) {
   }
 }
 
+async function deleteUserByID(req, res) {
+  const rawData: IRetrieveOneInput = req.body;
+  try {
+    let deleteUser = await adminService.deleteUserByID(req.body.value);
+    if (deleteUser) {
+      res.status(204).json({ statusText: 'success', data: null });
+    } else {
+      res.status(404).json({ statusText: 'fail', data: 'Not found' });
+    }
+  } catch (error) {
+    logger.error(error, { description: 'DeleteUser error', securityFlag: false, severity: 5 });
+  }
+}
+
 export const adminController = {
   retrieveAll: retrieveAll,
-  retrieveOne: retrieveOne
+  retrieveOne: retrieveOne,
+  deleteUser: deleteUserByID
 };

@@ -38,8 +38,14 @@ export class SessionService {
     return await this.sessionMapper.retrieveSessionData(sessionId);
   }
 
-  async deleteSession(sessionId: string): Promise<void> {
-    return await this.sessionMapper.deleteSession(sessionId);
+  async deleteSessionById(sessionId: string): Promise<void> {
+    const field = 'sessionId';
+    return await this.sessionMapper.deleteSession(field, sessionId);
+  }
+
+  async deleteUserSessions(userId: number): Promise<void> {
+    const field = 'userId';
+    return await this.sessionMapper.deleteSession(field, userId);
   }
 
   async sessionExists(sessionId: string): Promise<boolean> {

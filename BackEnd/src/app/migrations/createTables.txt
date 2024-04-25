@@ -7,8 +7,6 @@ CREATE TABLE sessions (
     userEmail VARCHAR(255),
     userFirstName VARCHAR(255),
     userLastName VARCHAR(255),
-    FOREIGN KEY (userId) REFERENCES users(id),
-    FOREIGN KEY (userRole) REFERENCES roles(id)
 );
 
 CREATE TABLE role (
@@ -17,3 +15,6 @@ CREATE TABLE role (
     description VARCHAR(255),
     permissions JSON
 );
+
+#cron
+DELETE FROM sessions  WHERE 28548925 > sessionExpiration;

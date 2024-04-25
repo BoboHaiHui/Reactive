@@ -10,10 +10,21 @@ export class AdminService {
     const options = { observe: 'response' as const, withCredentials: true };
     try {
       const response: any = await this.http.get(url, options).toPromise();
-      console.log(response);
       return response.body.data;
     } catch (error) {
       console.log('An error occurred while fetching users:', error);
+      throw error;
+    }
+  }
+
+  public async deleteUser(userID: number): Promise<any> {
+    const url: string = 'http://localhost:4000/admin/deleteUser';
+    const options = { observe: 'response' as const, withCredentials: true, body: { value: userID } };
+    try {
+      let response: any = await this.http.delete(url, options).toPromise();
+      return response.status;
+    } catch (error) {
+      console.log('An error occurred while deleting user:', error);
       throw error;
     }
   }
