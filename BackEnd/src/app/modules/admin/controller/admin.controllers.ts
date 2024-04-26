@@ -4,7 +4,7 @@ import { adminService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import { IRetrieveOneInput } from '../../user/domain/interface/input/userRegisterInput.interface';
 import { User } from '../../user/domain/models/user';
-import { IFullProfileUserData } from '../domain/interfaces/admin.interfaces';
+import { IEditUserProfile, IFullProfileUserData } from '../domain/interfaces/admin.interfaces';
 
 async function retrieveAll(req, res) {
   const tableName = 'users';
@@ -51,8 +51,28 @@ async function deleteUserByID(req, res) {
   }
 }
 
+async function editUserByID(req, res) {
+  const editUserData: IEditUserProfile = {
+    id: req.body.userId,
+    roleId: req.body.roleId,
+    blocked: req.body.blocked
+  };
+  try {
+    let editedUser = await adminService.editUserByID(editUserData);
+    console.log('EEEE', editedUser);
+    if (editedUser) {
+      res.status(204).json({ statusText: 'success', data: null });
+    } else {
+      res.status(404).json({ statusText: 'fail', data: 'Not found' });
+    }
+  } catch (error) {
+    logger.error(error, { description: 'Edit User error', securityFlag: false, severity: 5 });
+  }
+}
+
 export const adminController = {
   retrieveAll: retrieveAll,
   retrieveOne: retrieveOne,
-  deleteUser: deleteUserByID
+  deleteUser: deleteUserByID,
+  editUserByID: editUserByID
 };

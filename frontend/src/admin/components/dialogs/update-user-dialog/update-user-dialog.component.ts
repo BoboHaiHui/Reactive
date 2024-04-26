@@ -7,9 +7,12 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./update-user-dialog.component.css']
 })
 export class UpdateUserDialogComponent {
-  constructor(public dialogRef: MatDialogRef<UpdateUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+  public editUserData: any;
+  constructor(public dialogRef: MatDialogRef<UpdateUserDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.editUserData = { ...data };
+  }
 
   onSave(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(this.editUserData);
   }
 }

@@ -32,6 +32,12 @@ export interface IUserProfileData {
   };
 }
 
+export interface IEditUserData {
+  userId: number;
+  roleId: number;
+  blocked: boolean;
+}
+
 interface Field {
   value: 'firstName' | 'lastName' | 'email' | 'id';
 }

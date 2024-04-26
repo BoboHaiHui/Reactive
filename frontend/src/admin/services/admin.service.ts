@@ -1,6 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
+import { IEditUserProfile } from '../interfaces/admin.interfaces';
+
 @Injectable()
 export class AdminService {
   constructor(private http: HttpClient) {}
@@ -25,6 +27,23 @@ export class AdminService {
       return response.status;
     } catch (error) {
       console.log('An error occurred while deleting user:', error);
+      throw error;
+    }
+  }
+
+  public async editUserData(editUserData: any): Promise<any> {
+    const url: string = 'http://localhost:4000/admin/editUserData';
+    const options = { observe: 'response' as const, withCredentials: true };
+    const body: IEditUserProfile = {
+      userId: editUserData.id,
+      roleId: editUserData.role,
+      blocked: editUserData.blocked
+    };
+    try {
+      const response: any = await this.http.patch(url, body, options).toPromise();
+      return response.body.data;
+    } catch (error) {
+      console.log('An error occurred while edidting user data:', error);
       throw error;
     }
   }

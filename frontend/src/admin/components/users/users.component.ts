@@ -1,5 +1,6 @@
 import { IFullProfileUserData } from 'src/admin/interfaces/admin.interfaces';
 import { AdminService } from 'src/admin/services/admin.service';
+import { ConfirmationDialogComponent } from 'src/shared/components/dialogs/confirmation-dialog/confirmation-dialog.component';
 
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,25 +42,41 @@ export class UsersComponent implements OnInit {
 
   async editUser(user) {
     const dialogRef = this.dialog.open(UpdateUserDialogComponent, {
-      width: '250px',
+      width: '550px',
+      disableClose: true,
+      autoFocus: false,
       data: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.roleId, blocked: user.blocked }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-    });
+    const editUserData = await dialogRef.afterClosed().toPromise();
+    console.log(editUserData);
+    if (editUserData) {
+      const response = await this.adminService.editUserData(editUserData);
+      console.log('Edit user data:', response);
+    } else {
+      return;
+    }
   }
 
   async deleteUser(user) {
-    let response = await this.adminService.deleteUser(user.id);
-    console.log(response);
-    console.log(typeof response);
-    if (response == 204) {
-      await this.refreshDataSource();
-      // add banner - user was deleted
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      width: '350px',
+      disableClose: true,
+      autoFocus: false,
+      data: { title: 'Delete User', buttonTextConfirm: 'Delete', buttonTextCancel: 'Cancel' }
+    });
+    const dialogSelection = await dialogRef.afterClosed().toPromise();
+    if (dialogSelection) {
+      let response = await this.adminService.deleteUser(user.id);
+      if (response == 204) {
+        await this.refreshDataSource();
+        // add banner - user was deleted
+      } else {
+        // add banner
+        console.log('Add a banner message');
+      }
     } else {
-      // add banner
-      console.log('Add a banner message');
+      return;
     }
   }
 

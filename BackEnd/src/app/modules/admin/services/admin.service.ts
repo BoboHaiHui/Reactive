@@ -1,7 +1,7 @@
 import { sessionService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import { User } from '../../user/domain/models/user';
-import { IFullProfileUserData } from '../domain/interfaces/admin.interfaces';
+import { IEditUserProfile, IFullProfileUserData } from '../domain/interfaces/admin.interfaces';
 import { AdminMapper } from '../mapper/admin.mapper';
 
 export class AdminService {
@@ -30,6 +30,20 @@ export class AdminService {
       let deleteUserResponse = await this.adminMapper.deleteByID(tableName, field, userId);
       await sessionService.deleteUserSessions(userId);
       if (deleteUserResponse) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      logger.debug('Delete user or session error', error);
+      throw error();
+    }
+  }
+
+  async editUserByID(editUserData: IEditUserProfile): Promise<boolean> {
+    try {
+      let editUserDataResponse = await this.adminMapper.editUserByID(editUserData);
+      if (editUserDataResponse) {
         return true;
       } else {
         return false;

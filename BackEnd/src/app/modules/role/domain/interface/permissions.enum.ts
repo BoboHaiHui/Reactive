@@ -2,7 +2,7 @@ export enum Permissions {
   CreateUser = 'CreateUser',
   RetrieveUser = 'RetrieveUser',
   RetrieveAllUsers = 'RetrieveAllUsers',
-  UpdateUser = 'UpdateUser',
+  EditUser = 'EditUser',
   DeleteUser = 'DeleteUser',
   ActivateUser = 'ActivateUser',
   UpdateMyUser = 'UpdateMyUser',

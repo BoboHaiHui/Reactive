@@ -16,4 +16,5 @@ adminRoutes.route('/retrieveOneUser').get(adminController.retrieveOne);
 
 adminRoutes.route('/deleteUser').delete(checkPermissions('DeleteUser'), adminController.deleteUser);
 
+adminRoutes.route('/editUserData').patch(checkPermissions('EditUser'), adminController.editUserByID);
 export default adminRoutes;

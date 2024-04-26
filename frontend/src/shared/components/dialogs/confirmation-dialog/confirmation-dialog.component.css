@@ -1,0 +1,13 @@
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+  margin-bottom: 16px;
+  width: 100%;
+}

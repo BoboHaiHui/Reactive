@@ -14,4 +14,17 @@ export class AdminMapper extends BaseMapper<any> {
   async deleteByID(tableName: string, field: string, value: number): Promise<boolean> {
     return await super.delete(tableName, field, value);
   }
+
+  async editUserByID(editUserData): Promise<boolean> {
+    const tableName = 'users';
+    const model = { roleId: editUserData.roleId, blocked: editUserData.blocked };
+    const field = 'id';
+    const value = editUserData.id;
+    const response = await super.update(tableName, model, field, value);
+    if (response) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

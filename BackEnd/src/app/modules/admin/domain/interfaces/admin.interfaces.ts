@@ -6,3 +6,9 @@ export interface IFullProfileUserData {
   roleId: number;
   blocked: boolean;
 }
+
+export interface IEditUserProfile {
+  id: number;
+  roleId: number;
+  blocked: boolean;
+}
