@@ -4,6 +4,7 @@ import { randomBytes } from 'crypto';
 import config from '../../../../config';
 import { emailService, sessionService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
+import { generateRandomBytes } from '../../../shared/utils/randomBytes';
 import { utils } from '../../../shared/utils/validations';
 import { ILoginInput, IRegisterInput, IResponceMessage, IUserProfileData } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
@@ -59,12 +60,13 @@ export class UserService {
       registerData.firstName = rawRegisterData.firstName;
       registerData.lastName = rawRegisterData.lastName;
       registerData.email = rawRegisterData.email;
-      registerData.activation_code = randomBytes(config.user.activationCodeLength).toString('hex');
+      registerData.activation_code = await generateRandomBytes(config.user.activationCodeLength);
       registerData.password = await bcrypt.hash(rawRegisterData.password + config.user.password_sufix, 10);
       mapperResponce = await this.userMapper.register(tableName, registerData);
 
       if (mapperResponce) {
-        this.responseMessage = { statusText: 'success', data: 'User was created' };
+        await emailService.sendMail(registerData.email, 'Activate Reactive Accout', 'activate_account', registerData.activation_code);
+        this.responseMessage = { statusText: 'success', data: 'User was created. Please access the email to activate account' };
         return this.responseMessage;
       } else {
         this.responseMessage = { statusText: 'fail', data: null };
@@ -72,6 +74,24 @@ export class UserService {
       }
     } catch (error) {
       logger.debug('user.service --> register error', error);
+    }
+  }
+
+  async activateAccount(user_email: string, activation_code: any): Promise<IResponceMessage> {
+    try {
+      let dbActivationCode = await this.userMapper.getUserActivationCode(user_email);
+      if (dbActivationCode === activation_code && dbActivationCode != null) {
+        const response = await this.userMapper.activateAccount(user_email);
+        if (response) {
+          this.responseMessage = { statusText: 'success', data: null };
+        } else {
+          this.responseMessage = { statusText: 'fail', data: null };
+        }
+        return this.responseMessage;
+      }
+    } catch (error) {
+      logger.debug('Activation error');
+      throw error;
     }
   }
 
@@ -112,7 +132,6 @@ export class UserService {
         roleId: checkUser[0].roleId
       }
     };
-    await emailService.sendMail();
     return this.responseMessage;
   }
 

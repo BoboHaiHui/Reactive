@@ -31,7 +31,8 @@ const config = {
     idelExpiration: 1
   },
   email: {
-    session_API: process.env.SENDGRID_API_KEY
+    session_API: process.env.SENDGRID_API_KEY,
+    from_email_address: process.env.FROM_EMAIL
   }
 };
 

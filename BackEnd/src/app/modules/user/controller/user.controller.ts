@@ -1,6 +1,12 @@
 import { userService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
-import { ILoginInput, IRegisterInput, IResponceMessage, IUserProfileData } from '../domain/interface/input/userRegisterInput.interface';
+import {
+  IActivateAccountrData,
+  ILoginInput,
+  IRegisterInput,
+  IResponceMessage,
+  IUserProfileData
+} from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 
 async function register(req, res) {
@@ -15,6 +21,22 @@ async function register(req, res) {
     }
   } catch (error) {
     logger.error(error.message, { description: 'register error', securityFlag: true, severity: 7 });
+    res.status(500).json({ statusText: 'fail', data: null });
+  }
+}
+
+async function activateAccount(req, res) {
+  const rawActivateAccountData: IActivateAccountrData = req.body;
+  let responseMessage: IResponceMessage;
+  try {
+    responseMessage = await userService.activateAccount(rawActivateAccountData.email, rawActivateAccountData.activationCode);
+    if (responseMessage.statusText === 'success') {
+      res.status(201).json(responseMessage);
+    } else {
+      res.status(422).json(responseMessage);
+    }
+  } catch (error) {
+    logger.error(error.message, { description: 'activation account error', securityFlag: false, severity: 7 });
     res.status(500).json({ statusText: 'fail', data: null });
   }
 }
@@ -85,5 +107,6 @@ export const userController = {
   login: login,
   updateMyAccount: updateMyAccount,
   logout: logout,
-  sendUserProfileData: sendUserProfileData
+  sendUserProfileData: sendUserProfileData,
+  activateAccount: activateAccount
 };

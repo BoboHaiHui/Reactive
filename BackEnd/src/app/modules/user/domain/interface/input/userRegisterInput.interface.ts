@@ -38,6 +38,11 @@ export interface IEditUserData {
   blocked: boolean;
 }
 
+export interface IActivateAccountrData {
+  email: string;
+  activationCode: string;
+}
+
 interface Field {
   value: 'firstName' | 'lastName' | 'email' | 'id';
 }

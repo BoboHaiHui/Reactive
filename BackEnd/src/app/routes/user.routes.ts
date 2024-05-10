@@ -15,4 +15,6 @@ userRoutes.route('/profileUserData').get(userController.sendUserProfileData);
 
 userRoutes.route('/updateMyUser').patch(checkPermissions('UpdateMyUser'), userController.updateMyAccount);
 
+userRoutes.route('/activateAccount').patch(userController.activateAccount);
+
 export default userRoutes;
