@@ -9,14 +9,21 @@ import logger from './app/shared/services/logger/logger.service';
 
 let app = express();
 
-app.use(cors({origin: 'http://localhost:4200', allowedHeaders:['Content-type', 'Authorization', 'Set-Cookie', 'Cookie'], credentials: true, methods:['GET','PUT','POST','DELETE', 'PATCH']}));
+app.use(
+  cors({
+    origin: ['http://localhost:4200', 'https://zap'],
+    allowedHeaders: ['Content-type', 'Authorization', 'Set-Cookie', 'Cookie'],
+    credentials: true,
+    methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
+  })
+);
 //logger middleware
 app.use(logger.request);
 app.use(cookieParser());
 app.use(addContextPermissions);
 
 //add req.body
-app.use(express.urlencoded({ extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //add application routes

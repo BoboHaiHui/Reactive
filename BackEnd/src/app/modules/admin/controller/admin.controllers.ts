@@ -59,7 +59,6 @@ async function editUserByID(req, res) {
   };
   try {
     let editedUser = await adminService.editUserByID(editUserData);
-    console.log('EEEE', editedUser);
     if (editedUser) {
       res.status(204).json({ statusText: 'success', data: null });
     } else {

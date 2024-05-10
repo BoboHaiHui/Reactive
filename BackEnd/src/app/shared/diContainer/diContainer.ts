@@ -9,6 +9,7 @@ import { UserService } from '../../modules/user/services/user.service';
 import { BaseMapper } from '../mapper/base.mapper';
 import { BaseService } from '../services/base.service';
 import { MYSQL } from '../services/DB/mysql-connection.service';
+import { EmailService } from '../services/email/email.service';
 
 const connectionDB = new MYSQL();
 
@@ -61,6 +62,10 @@ function createSessionService(): SessionService {
   return new SessionService(sessionMapper);
 }
 
+function createEmailService(): EmailService {
+  return new EmailService();
+}
+
 // Export the created instances
 const baseMapper = createBaseMapper();
 const baseService = createBaseService();
@@ -72,5 +77,17 @@ const userService = createUserService();
 const roleService = createRoleService();
 // const sessionMapper = createSessionMapper();
 const sessionService = createSessionService();
+const emailService = createEmailService();
 
-export { baseMapper, baseService, adminMapper, adminService, userMapper, userService, connectionDB, roleService, sessionService };
+export {
+  baseMapper,
+  baseService,
+  adminMapper,
+  adminService,
+  userMapper,
+  userService,
+  connectionDB,
+  roleService,
+  sessionService,
+  emailService
+};

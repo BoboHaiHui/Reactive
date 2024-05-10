@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import { randomBytes } from 'crypto';
 
 import config from '../../../../config';
-import { sessionService } from '../../../shared/diContainer/diContainer';
+import { emailService, sessionService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import { utils } from '../../../shared/utils/validations';
 import { ILoginInput, IRegisterInput, IResponceMessage, IUserProfileData } from '../domain/interface/input/userRegisterInput.interface';
@@ -112,6 +112,7 @@ export class UserService {
         roleId: checkUser[0].roleId
       }
     };
+    await emailService.sendMail();
     return this.responseMessage;
   }
 

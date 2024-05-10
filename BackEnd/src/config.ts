@@ -11,7 +11,7 @@ const database = process.env.DATABASE;
 
 const config = {
   server: {
-    port: SERVER_PORT,
+    port: SERVER_PORT
   },
   dataBase: {
     connectionLimit: connectionLimit,
@@ -20,16 +20,19 @@ const config = {
     password: password,
     database: database
   },
-  user:{
+  user: {
     defaultUserId: 2,
     blocked: true,
     activationCodeLength: 8,
     password_sufix: process.env.PASSWORD_SUFIX
   },
-  session:{
+  session: {
     sessionExpiration: 4,
     idelExpiration: 1
+  },
+  email: {
+    session_API: process.env.SENDGRID_API_KEY
   }
-}
+};
 
 export default config;
