@@ -11,12 +11,13 @@ let app = express();
 
 app.use(
   cors({
-    origin: ['http://localhost:4200', 'https://zap'],
+    origin: ['http://localhost:4200'],
     allowedHeaders: ['Content-type', 'Authorization', 'Set-Cookie', 'Cookie'],
     credentials: true,
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
   })
 );
+
 //logger middleware
 app.use(logger.request);
 app.use(cookieParser());

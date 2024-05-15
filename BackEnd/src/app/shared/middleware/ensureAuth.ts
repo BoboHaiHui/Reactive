@@ -3,16 +3,15 @@ import { NextFunction, Request, Response } from 'express';
 import { IResponceMessage } from '../../modules/user/domain/interface/input/userRegisterInput.interface';
 import logger from '../services/logger/logger.service';
 
-function checkPermissions(permission: string) {
+function ensureAuth() {
   return function (req: Request, res: Response, next: NextFunction) {
     console.log(req);
-    const userPermissions = req.sessionData[0].permissions;
     let responseMessage: IResponceMessage;
     try {
-      if (userPermissions && userPermissions.includes(permission)) {
+      if (req.sessionData) {
         next();
       } else {
-        responseMessage = { statusText: 'fail', data: 'Access Forbidden' };
+        responseMessage = { statusText: 'fail', data: 'User must be logged in!' };
         logger.alert({ name: '', message: '' }, { description: 'Access Forbidden', securityFlag: true, severity: 5 });
         res.status(403).send(responseMessage);
       }
@@ -23,4 +22,4 @@ function checkPermissions(permission: string) {
   };
 }
 
-export { checkPermissions };
+export { ensureAuth };
