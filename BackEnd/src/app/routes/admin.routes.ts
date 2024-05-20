@@ -15,7 +15,7 @@ adminRoutes.route('/retrieveAllUsers').get(ensureAuth(), checkPermissions('Retri
 
 adminRoutes.route('/retrieveOneUser').get(adminController.retrieveOne);
 
-adminRoutes.route('/deleteUser').delete(checkPermissions('DeleteUser'), adminController.deleteUser);
+adminRoutes.route('/deleteUser').delete(ensureAuth(), checkPermissions('DeleteUser'), adminController.deleteUser);
 
-adminRoutes.route('/editUserData').patch(checkPermissions('EditUser'), adminController.editUserByID);
+adminRoutes.route('/editUserData').patch(ensureAuth(), checkPermissions('EditUser'), adminController.editUserByID);
 export default adminRoutes;

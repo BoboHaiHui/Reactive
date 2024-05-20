@@ -5,7 +5,6 @@ import logger from '../services/logger/logger.service';
 
 function ensureAuth() {
   return function (req: Request, res: Response, next: NextFunction) {
-    console.log(req);
     let responseMessage: IResponceMessage;
     try {
       if (req.sessionData) {
@@ -17,6 +16,7 @@ function ensureAuth() {
       }
     } catch (error) {
       responseMessage = { statusText: 'fail', data: 'Internal Server Error' };
+      logger.debug('ensureAuth error', error);
       res.status(500).send(responseMessage);
     }
   };

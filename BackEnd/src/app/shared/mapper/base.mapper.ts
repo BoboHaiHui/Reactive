@@ -79,9 +79,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       const sql = 'SELECT * FROM ?? WHERE ?? = ? LIMIT 1';
       const inserts = [tableName, field, value];
       const query = this.pool.format(sql, inserts);
-      console.log(query);
       const [rows, fields] = await connection.execute(query);
-
       return rows;
     } catch (error) {
       logger.critical(error, { description: 'base.mapper-retrieveAll error', securityFlag: false, severity: 5 });

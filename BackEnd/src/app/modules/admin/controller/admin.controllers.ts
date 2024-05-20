@@ -1,5 +1,3 @@
-import { response } from 'express';
-
 import { adminService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import { IRetrieveOneInput } from '../../user/domain/interface/input/userRegisterInput.interface';
@@ -15,6 +13,7 @@ async function retrieveAll(req, res) {
     logger.error(error, { description: 'RetrieveAll error', securityFlag: false, severity: 5 });
   }
   if (getAllUsers) {
+    res.setHeader('Cache-Control', 'no-cache, no-store');
     res.status(201).json({ statusText: 'success', data: getAllUsers });
   } else {
     res.status(500).json({ statusText: 'fail', data: null });

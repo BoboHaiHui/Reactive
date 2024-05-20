@@ -48,7 +48,7 @@ async function login(req, res) {
     responseMessage = await userService.login(rawLoginData);
     if (responseMessage.statusText === 'success') {
       const sessionId = responseMessage.data;
-      res.cookie('sessionId', sessionId, { domain: 'localhost', httpOnly: true, secure: true });
+      res.cookie('sessionId', sessionId, { domain: 'localhost', httpOnly: true, secure: true, samesite: 'strict' });
       responseMessage.data = 'Login successful';
       res.status(201).json(responseMessage);
     } else {
