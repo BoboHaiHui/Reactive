@@ -2,7 +2,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const SERVER_BASE_URL = 'http://localhost';
 const SERVER_PORT = 4000;
+const FE_BASE_URL = 'http://localhost';
+const FE_PORT = 4200;
 const connectionLimit: number = parseInt(process.env.CONNECTION_LIMIT || '10', 10);
 const host = process.env.HOST;
 const user = process.env.USER;
@@ -11,7 +14,12 @@ const database = process.env.DATABASE;
 
 const config = {
   server: {
+    base_url: SERVER_BASE_URL,
     port: SERVER_PORT
+  },
+  frontend: {
+    base_url: FE_BASE_URL,
+    port: FE_PORT
   },
   dataBase: {
     connectionLimit: connectionLimit,

@@ -65,7 +65,10 @@ export class UserService {
       mapperResponce = await this.userMapper.register(tableName, registerData);
 
       if (mapperResponce) {
-        await emailService.sendMail(registerData.email, 'Activate Reactive Accout', 'activate_account', registerData.activation_code);
+        await emailService.sendMail(registerData.email, 'Activate Reactive Accout', 'activate_account', [
+          registerData.activation_code,
+          registerData.email
+        ]);
         this.responseMessage = { statusText: 'success', data: 'User was created. Please access the email to activate account' };
         return this.responseMessage;
       } else {
@@ -116,7 +119,10 @@ export class UserService {
         this.responseMessage = { statusText: 'fail', data: 'Wrong email or password' };
         return this.responseMessage;
       }
-      //add logic if the user is blocked
+      if (checkUser[0].blocked) {
+        this.responseMessage = { statusText: 'fail', data: 'User is blocked! Please contact our support team' };
+        return this.responseMessage;
+      }
       sessionCookie = await sessionService.createSession(checkUser[0]);
     } catch (error) {
       logger.debug('user.service ---> login error', error);

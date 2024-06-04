@@ -1,4 +1,5 @@
 import { AdminComponent } from 'src/admin/admin.component';
+import { ActivateAccountComponent } from 'src/general-pages/activate-account/activate-account.component';
 import { ContactComponent } from 'src/general-pages/contact/contact.component';
 import { ErrorPageComponent } from 'src/general-pages/error-page/error-page.component';
 import { HomeComponent } from 'src/general-pages/home/home.component';
@@ -15,7 +16,8 @@ const routes: Routes = [
     component: HomeComponent,
     children: [
       { path: 'login', component: LoginComponent },
-      { path: 'register', component: RegisterComponent }
+      { path: 'register', component: RegisterComponent },
+      { path: 'activate-account/:email', component: ActivateAccountComponent }
     ]
   },
   { path: 'contact', component: ContactComponent },
@@ -31,7 +33,8 @@ const routes: Routes = [
     canActivate: [canActivateAdmin],
     runGuardsAndResolvers: 'always'
   },
-  { path: '**', component: ErrorPageComponent }
+  { path: '**', component: ErrorPageComponent },
+  { path: 'error-page', component: ErrorPageComponent }
 ];
 
 @NgModule({

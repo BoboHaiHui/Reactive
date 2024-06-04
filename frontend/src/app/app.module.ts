@@ -16,6 +16,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 
+import { ActivateAccountComponent } from '../general-pages/activate-account/activate-account.component';
 import { AppRouteModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -28,7 +29,8 @@ import { AppComponent } from './app.component';
     RegisterComponent,
     ContactComponent,
     HomeNavbarComponent,
-    ErrorPageComponent
+    ErrorPageComponent,
+    ActivateAccountComponent
   ],
   imports: [
     BrowserModule,

@@ -10,27 +10,6 @@ import { ILoginData, IRegisterData } from './profile.service.interface';
 export class ProfileService {
   constructor(private profileStore: ProfileStore, private http: HttpClient, private router: Router) {}
 
-  public async login(url: string, loginData: ILoginData): Promise<void> {
-    const userCredentials: ILoginData = {
-      email: loginData.email,
-      password: loginData.password
-    };
-    const options = { observe: 'response' as const, withCredentials: true };
-    try {
-      const res: HttpResponse<any> = await this.http.post(url, userCredentials, options).toPromise();
-
-      if (res.status === 201) {
-        this.profileStore.setUserProfileData(res.body?.userData);
-        this.navigateToRoleMenu(this.profileStore.getUserProfileData().roleId);
-      } else {
-        console.log('Something went wrong.');
-      }
-    } catch (error) {
-      console.error('Internal server error', error);
-      throw error;
-    }
-  }
-
   public async register(url: string, registerData: IRegisterData): Promise<boolean> {
     const userRegisterData = {
       firstName: registerData.firstName,
@@ -52,6 +31,48 @@ export class ProfileService {
     } catch (err) {
       console.error('Internal server error', err);
       throw err;
+    }
+  }
+
+  async activate_account(email: string, activationCode: string) {
+    const url = 'http://localhost:4000/user/activateAccount';
+    const userActivationAccountData = {
+      email: email,
+      activationCode: activationCode
+    };
+    const options = { observe: 'response' as const, data: [] };
+    try {
+      const res: HttpResponse<any> = await this.http.patch(url, userActivationAccountData, options).toPromise();
+      if (res.status == 201) {
+        //send a toast message with Account has been activated. Please login!
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      console.log('Internal server error');
+      return this.router.navigateByUrl('error-page');
+    }
+  }
+
+  public async login(url: string, loginData: ILoginData): Promise<void> {
+    const userCredentials: ILoginData = {
+      email: loginData.email,
+      password: loginData.password
+    };
+    const options = { observe: 'response' as const, withCredentials: true };
+    try {
+      const res: HttpResponse<any> = await this.http.post(url, userCredentials, options).toPromise();
+
+      if (res.status === 201) {
+        this.profileStore.setUserProfileData(res.body?.userData);
+        this.navigateToRoleMenu(this.profileStore.getUserProfileData().roleId);
+      } else {
+        console.log('Something went wrong.');
+      }
+    } catch (error) {
+      console.error('Internal server error', error);
+      throw error;
     }
   }
 

@@ -1,20 +1,10 @@
 <div class="login-container">
   <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
     <label for="email"> Email </label><br />
-    <input
-      type="text"
-      id="email"
-      placeholder=" JohnDoe@domaine.name"
-      formControlName="email"
-    />
+    <input type="text" id="email" placeholder=" JohnDoe@domaine.name" formControlName="email" />
     <br /><br />
     <label for="pass"> Password </label><br />
-    <input
-      type="text"
-      id="pass"
-      placeholder=" ****** "
-      formControlName="password"
-    />
+    <input type="password" id="pass" placeholder=" ****** " formControlName="password" />
     <br /><br />
     <input type="submit" value="Login" id="btn" />
   </form>

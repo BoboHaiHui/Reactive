@@ -1,0 +1,8 @@
+<div class="activate-account-container">
+  <form [formGroup]="activateCodeForm" (ngSubmit)="onSubmit()">
+    <label for="activateCode">Activation Code</label><br /><br />
+    <input type="text" id="activateCode" placeholder="Enter activation code" formControlName="activateCode" />
+    <br /><br />
+    <input type="submit" value="Activate" id="btn" />
+  </form>
+</div>
