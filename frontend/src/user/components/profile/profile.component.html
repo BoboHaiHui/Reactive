@@ -1,13 +1,19 @@
 <div class="profile-container">
   <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
-    <label for="firstName"> FirstName </label><br />
-    <input type="text" id="firstname" placeholder=" John" formControlName="firstName" />
+    <label for="firstName"> First Name </label><br />
+    <input type="text" id="firstName" placeholder="John" formControlName="firstName" />
     <br /><br />
-    <label for="lastName"> LastName </label><br />
-    <input type="text" id="lastname" placeholder=" Doe" formControlName="lastName" />
+    <label for="lastName"> Last Name </label><br />
+    <input type="text" id="lastName" placeholder="Doe" formControlName="lastName" />
     <br /><br />
-    <label for="pass"> Password </label><br />
-    <input type="text" id="pass" placeholder=" ****** " formControlName="password" />
+    <label for="oldPassword"> Old Password </label><br />
+    <input type="password" id="oldPassword" formControlName="oldPassword" />
+    <br /><br />
+    <label for="newPassword"> New Password </label><br />
+    <input type="password" id="newPassword" formControlName="newPassword" />
+    <br /><br />
+    <label for="retypedPassword"> Retype Password </label><br />
+    <input type="password" id="retypedPassword" formControlName="retypedPassword" />
     <br /><br />
     <input type="submit" value="Save changes" id="btn" />
   </form>

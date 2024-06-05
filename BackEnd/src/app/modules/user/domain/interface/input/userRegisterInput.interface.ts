@@ -43,6 +43,13 @@ export interface IActivateAccountrData {
   activationCode: string;
 }
 
+export interface IUpdateProfileInput {
+  firstName?: string;
+  lastName?: string;
+  oldPassword?: string;
+  newPassword?: string;
+}
+
 interface Field {
   value: 'firstName' | 'lastName' | 'email' | 'id';
 }

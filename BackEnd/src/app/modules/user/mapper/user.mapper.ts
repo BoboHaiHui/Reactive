@@ -1,6 +1,7 @@
 import { BaseMapper } from '../../../shared/mapper/base.mapper';
 import { IDBConnection } from '../../../shared/services/DB/DBConnection.interface';
 import logger from '../../../shared/services/logger/logger.service';
+import { IUpdateProfileInput } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 
 export class UserMapper extends BaseMapper<User> {
@@ -49,6 +50,17 @@ export class UserMapper extends BaseMapper<User> {
     } catch (error) {
       logger.debug('Activation account error');
       throw error;
+    }
+  }
+
+  async updateProfile(userData: IUpdateProfileInput, userEmail: string): Promise<User> {
+    const tableName: string = 'users';
+    const field: string = 'email';
+    const response = await this.update(tableName, userData, field, userEmail);
+    if (response) {
+      return response;
+    } else {
+      return null;
     }
   }
 }

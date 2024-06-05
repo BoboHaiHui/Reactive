@@ -6,7 +6,13 @@ import { emailService, sessionService } from '../../../shared/diContainer/diCont
 import logger from '../../../shared/services/logger/logger.service';
 import { generateRandomBytes } from '../../../shared/utils/randomBytes';
 import { utils } from '../../../shared/utils/validations';
-import { ILoginInput, IRegisterInput, IResponceMessage, IUserProfileData } from '../domain/interface/input/userRegisterInput.interface';
+import {
+  ILoginInput,
+  IRegisterInput,
+  IResponceMessage,
+  IUpdateProfileInput,
+  IUserProfileData
+} from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 import { UserMapper } from '../mapper/user.mapper';
 
@@ -151,8 +157,40 @@ export class UserService {
     return this.responseMessage;
   }
 
-  async update(tableName: string, userData: User, field: string, value: string | number): Promise<User> {
-    return await this.userMapper.update(tableName, userData, field, value);
+  async updateProfile(userData: IUpdateProfileInput, userEmail: string, sessionId: string): Promise<boolean> {
+    const checkUser = await this.userMapper.retrieveOne('users', 'email', userEmail);
+
+    if (userData.newPassword) {
+      const isOldPasswordCorrect = await bcrypt.compare(userData.oldPassword + config.user.password_sufix, checkUser[0].password);
+
+      if (!isOldPasswordCorrect) {
+        return null;
+      }
+
+      if (!utils.passwordValidator(userData.newPassword)) {
+        return null;
+      }
+    }
+
+    const updateUserData: { firstName?: string; lastName?: string; password?: string } = {};
+
+    if (userData.firstName) {
+      updateUserData.firstName = userData.firstName;
+    }
+    if (userData.lastName) {
+      updateUserData.lastName = userData.lastName;
+    }
+    if (userData.newPassword) {
+      updateUserData.password = await bcrypt.hash(userData.newPassword + config.user.password_sufix, 10);
+    }
+    try {
+      const updatedUser = await this.userMapper.updateProfile(updateUserData, userEmail);
+      if (updateUserData) {
+        return true;
+      }
+    } catch {
+      return null;
+    }
   }
 
   async checkEmailExistance(userEmail: String): Promise<boolean> {
@@ -166,16 +204,31 @@ export class UserService {
 
   async sendUserProfileData(req): Promise<IUserProfileData | null> {
     if (req.sessionData && req.sessionData[0] != null) {
-      this.responseMessage = {
-        statusText: 'success',
-        data: 'User profile data',
-        userData: {
-          firstName: req.sessionData[0].userFirstName,
-          lastName: req.sessionData[0].userLastName,
-          email: req.sessionData[0].userEmail,
-          roleId: req.sessionData[0].userRole
-        }
-      };
+      const checkUser = await this.userMapper.retrieveOne('users', 'email', req.sessionData[0].email);
+      if (checkUser) {
+        this.responseMessage = {
+          statusText: 'success',
+          data: 'User profile data',
+          userData: {
+            firstName: checkUser.firstName,
+            lastName: checkUser.lastName,
+            email: checkUser.email,
+            roleId: checkUser.roleId
+          }
+        };
+      } else {
+        this.responseMessage = {
+          statusText: 'fail',
+          data: 'User profile data not found',
+          userData: {
+            firstName: null,
+            lastName: null,
+            email: null,
+            roleId: null
+          }
+        };
+        await sessionService.deleteSessionById(req.cookies.sessionId);
+      }
       return this.responseMessage;
     } else {
       return null;

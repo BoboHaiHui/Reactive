@@ -5,6 +5,7 @@ import {
   ILoginInput,
   IRegisterInput,
   IResponceMessage,
+  IUpdateProfileInput,
   IUserProfileData
 } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
@@ -75,17 +76,16 @@ async function sendUserProfileData(req, res) {
   }
 }
 
-async function updateMyAccount(req, res) {
-  const tableName = 'users';
-  const userModel: User = req.body;
-  let insertedUser: User;
+async function updateProfile(req, res) {
+  const userModel: IUpdateProfileInput = req.body;
+  let hasChanged: boolean;
   try {
-    insertedUser = await userService.update(tableName, userModel, 'email', req.body.email);
+    hasChanged = await userService.updateProfile(userModel, req.sessionData[0].userEmail, req.cookies.sessionId);
   } catch (error) {
     logger.error(error.message, { description: 'register error', securityFlag: true, severity: 7 });
   }
-  if (insertedUser) {
-    res.status(201).json({ statusText: 'success', data: insertedUser });
+  if (hasChanged) {
+    res.status(201).json({ statusText: 'success', data: null });
   } else {
     res.status(500).json({ statusText: 'fail', data: null });
   }
@@ -105,7 +105,7 @@ async function logout(req, res) {
 export const userController = {
   register: register,
   login: login,
-  updateMyAccount: updateMyAccount,
+  updateProfile: updateProfile,
   logout: logout,
   sendUserProfileData: sendUserProfileData,
   activateAccount: activateAccount

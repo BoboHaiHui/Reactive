@@ -13,7 +13,7 @@ userRoutes.route('/logout').get(userController.logout);
 
 userRoutes.route('/profileUserData').get(userController.sendUserProfileData);
 
-userRoutes.route('/updateMyUser').patch(checkPermissions('UpdateMyUser'), userController.updateMyAccount);
+userRoutes.route('/updateProfile').patch(checkPermissions('UpdateMyProfile'), userController.updateProfile);
 
 userRoutes.route('/activateAccount').patch(userController.activateAccount);
 

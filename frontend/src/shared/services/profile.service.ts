@@ -70,9 +70,9 @@ export class ProfileService {
       } else {
         console.log('Something went wrong.');
       }
-    } catch (error) {
-      console.error('Internal server error', error);
-      throw error;
+    } catch {
+      console.error('Internal server error');
+      throw new Error('Internal server error');
     }
   }
 
@@ -92,10 +92,27 @@ export class ProfileService {
         } else {
           return null;
         }
-      } catch (err) {
-        console.error('Internal server error', err);
-        throw err;
+      } catch {
+        console.error('Internal server error');
+        throw new Error('Internal server error');
       }
+    }
+  }
+
+  public async updateProfileData(newData) {
+    const url: string = 'http://localhost:4000/user/updateProfile';
+    const options = { observe: 'response' as const, withCredentials: true };
+    try {
+      const res: HttpResponse<any> = await this.http.patch(url, newData, options).toPromise();
+      if (res.status == 201) {
+        //send a toast message with Account has been activated. Please login!
+        return true;
+      } else {
+        return false;
+      }
+    } catch {
+      console.error('Internal server error');
+      throw new Error('Internal server error');
     }
   }
 
@@ -125,9 +142,9 @@ export class ProfileService {
         //add banner - logout error! sessionId could still be active
         return false;
       }
-    } catch (err) {
-      console.error('Internal server error', err);
-      throw err;
+    } catch {
+      console.error('Internal server error');
+      throw new Error('Internal server error');
     }
   }
 
