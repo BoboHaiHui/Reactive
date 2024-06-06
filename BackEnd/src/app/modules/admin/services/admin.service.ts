@@ -44,6 +44,7 @@ export class AdminService {
     try {
       let editUserDataResponse = await this.adminMapper.editUserByID(editUserData);
       if (editUserDataResponse) {
+        await sessionService.deleteUserSessions(editUserData.id);
         return true;
       } else {
         return false;

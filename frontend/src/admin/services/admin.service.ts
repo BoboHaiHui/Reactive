@@ -41,7 +41,7 @@ export class AdminService {
     };
     try {
       const response: any = await this.http.patch(url, body, options).toPromise();
-      return response.body.data;
+      return response.status;
     } catch (error) {
       console.log('An error occurred while edidting user data:', error);
       throw error;
