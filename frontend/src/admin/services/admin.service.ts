@@ -8,7 +8,7 @@ export class AdminService {
   constructor(private http: HttpClient) {}
 
   public async retrieveAll(): Promise<any> {
-    const url: string = 'http://localhost:4000/admin/retrieveAllUsers';
+    const url: string = 'http://localhost:4000/admin/users/retrieveAllUsers';
     const options = { observe: 'response' as const, withCredentials: true };
     try {
       const response: any = await this.http.get(url, options).toPromise();
@@ -20,7 +20,7 @@ export class AdminService {
   }
 
   public async deleteUser(userID: number): Promise<any> {
-    const url: string = 'http://localhost:4000/admin/deleteUser';
+    const url: string = 'http://localhost:4000/admin/users/deleteUser';
     const options = { observe: 'response' as const, withCredentials: true, body: { value: userID } };
     try {
       let response: any = await this.http.delete(url, options).toPromise();
@@ -32,7 +32,7 @@ export class AdminService {
   }
 
   public async editUserData(editUserData: any): Promise<any> {
-    const url: string = 'http://localhost:4000/admin/editUserData';
+    const url: string = 'http://localhost:4000/admin/users/editUserData';
     const options = { observe: 'response' as const, withCredentials: true };
     const body: IEditUserProfile = {
       userId: editUserData.id,

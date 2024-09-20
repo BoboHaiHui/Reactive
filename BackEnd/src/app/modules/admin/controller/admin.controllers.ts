@@ -46,7 +46,7 @@ async function deleteUserByID(req, res) {
       res.status(404).json({ statusText: 'fail', data: 'Not found' });
     }
   } catch (error) {
-    logger.error(error, { description: 'DeleteUser error', securityFlag: false, severity: 5 });
+    logger.error(error, { description: 'Delete User error', securityFlag: false, severity: 5 });
   }
 }
 

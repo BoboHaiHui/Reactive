@@ -15,11 +15,13 @@ import { RolesComponent } from './components/roles/roles.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UsersComponent } from './components/users/users.component';
 import { AdminService } from './services/admin.service';
+import { RoleService } from './services/role.service';
+import { UpdateRoleDialogComponent } from './components/dialogs/update-role-dialog/update-role-dialog/update-role-dialog.component';
 
 @NgModule({
   imports: [HttpClientModule, CommonModule, AngularMaterialModule, RouterModule.forChild(AdminRoutes), SharedModule, FormsModule],
   exports: [],
-  providers: [AdminService],
-  declarations: [AdminComponent, AdminNavbarComponent, UsersComponent, RolesComponent, SettingsComponent, UpdateUserDialogComponent]
+  providers: [AdminService, RoleService],
+  declarations: [AdminComponent, AdminNavbarComponent, UsersComponent, RolesComponent, SettingsComponent, UpdateUserDialogComponent, UpdateRoleDialogComponent]
 })
 export class AdminModule {}

@@ -11,9 +11,15 @@ CREATE TABLE sessions (
 
 CREATE TABLE role (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    type ENUM('admin', 'user') NOT NULL,
+    type VARCHAR(255) UNIQUE,
     description VARCHAR(255),
     permissions JSON
+);
+
+#Right now, it will be useless to implement it
+CREATE TABLE permissions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    permission_name VARCHAR(255) NOT NULL UNIQUE -- store unique permission names
 );
 
 #cron

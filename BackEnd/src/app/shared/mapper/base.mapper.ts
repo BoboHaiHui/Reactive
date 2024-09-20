@@ -101,6 +101,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
 
       return model;
     } catch (error) {
+      // console.error('base.mapper-update error: ', error);
       logger.critical(error, { description: 'base.mapper-update error', securityFlag: false, severity: 7 });
       throw error;
     } finally {

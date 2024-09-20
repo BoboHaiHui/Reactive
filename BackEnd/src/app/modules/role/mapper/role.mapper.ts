@@ -25,7 +25,35 @@ export class RoleMapper extends BaseMapper<Role> {
     }
   }
 
+  async updateRoleByType(updateRoleData): Promise<boolean> {
+    const tableName = 'roles';
+    const model = {
+      description: updateRoleData.description,
+      //permissions needs to be in a json valid format in order to be pass to the base mapper
+      permissions: JSON.stringify(updateRoleData.permissions)
+    };
+    const field = 'type';
+    const value = updateRoleData.type;
+    const response = await this.update(tableName, model, field, value);
+    if (response) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   async retrieveRoleById(tableName: string, field: string, value: any): Promise<Role> {
     return await this.retrieveOne(tableName, field, value);
+  }
+
+  async retrieveAllRoles(): Promise<Role[]> {
+    const tableName = 'roles';
+    return await this.retrieveAll(tableName);
+  }
+
+  async deleteRole(value: string): Promise<boolean> {
+    const tableName = 'roles';
+    const field = 'type';
+    return await this.delete(tableName, field, value);
   }
 }

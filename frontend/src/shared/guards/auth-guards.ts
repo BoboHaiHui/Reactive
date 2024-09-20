@@ -22,6 +22,7 @@ const canActivateWithRole = async (roleChecker: (userData: any) => boolean) => {
     router.navigate(['login']);
     return false;
   }
+  // return true;
 };
 
 export const canActivateUser = async () => {

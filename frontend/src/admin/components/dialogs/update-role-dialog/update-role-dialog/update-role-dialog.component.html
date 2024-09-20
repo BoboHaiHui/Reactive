@@ -1,0 +1,45 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title class="title">Role Data</h2>
+  <mat-dialog-content class="message mat-h3">
+    <form class="example-form">
+      <table class="example-full-width" cellspacing="0">
+        <tr>
+          <td>
+            <mat-form-field class="example-full-width">
+              <mat-label>Role name</mat-label>
+              <input matInput value="{{ data.type }}" />
+            </mat-form-field>
+          </td>
+          <td>
+            <mat-form-field class="example-full-width">
+              <mat-label>Role Id</mat-label>
+              <input matInput value="{{ data.roleId }}" />
+            </mat-form-field>
+          </td>
+        </tr>
+      </table>
+
+      <p>
+        <mat-form-field class="example-full-width">
+          <mat-label>Description</mat-label>
+          <input matInput value="{{ data.description }}" />
+        </mat-form-field>
+      </p>
+
+      <section class="example-section">
+        <h4>Change Permissions:</h4>
+        <ng-container *ngFor="let permission of permissionsList">
+          <p>
+            <mat-checkbox [(ngModel)]="rolePermissions[permission]" [ngModelOptions]="{ standalone: true }">
+              {{ permission }}
+            </mat-checkbox>
+          </p>
+        </ng-container>
+      </section>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions class="buttons">
+    <button mat-raised-button color="primary" [mat-dialog-close]="false">Cancel</button>
+    <button mat-raised-button color="warn" mat-dialog-close (click)="onSave()">Save</button>
+  </mat-dialog-actions>
+</div>

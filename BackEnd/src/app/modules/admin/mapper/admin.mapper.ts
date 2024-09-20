@@ -10,9 +10,9 @@ export class AdminMapper extends BaseMapper<any> {
   async retrieveAll(tableName: string): Promise<User[]> {
     return (await super.retrieveAll(tableName)) as User[];
   }
-
+  // TO DO-delete the table name and fields from all services!!!
   async deleteByID(tableName: string, field: string, value: number): Promise<boolean> {
-    return await super.delete(tableName, field, value);
+    return await this.delete(tableName, field, value);
   }
 
   async editUserByID(editUserData): Promise<boolean> {

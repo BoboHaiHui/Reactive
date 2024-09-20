@@ -7,15 +7,22 @@ import { ensureAuth } from '../shared/middleware/ensureAuth';
 
 const adminRoutes = express.Router();
 
-adminRoutes.route('/createRole').post(roleController.createRole);
+adminRoutes.route('/roles/createRole').post(ensureAuth(), checkPermissions('CreateRole'), roleController.createRole);
 
-adminRoutes.route('/retrieveRoleById').get(roleController.retrieveRoleById);
+adminRoutes.route('/roles/updateRole').patch(ensureAuth(), checkPermissions('UpdateRole'), roleController.updateRoleByID);
 
-adminRoutes.route('/retrieveAllUsers').get(ensureAuth(), checkPermissions('RetrieveAllUsers'), adminController.retrieveAll);
+adminRoutes.route('/roles/retrieveRoleById').get(roleController.retrieveRoleById);
 
-adminRoutes.route('/retrieveOneUser').get(adminController.retrieveOne);
+adminRoutes.route('/roles/retrieveAllRoles').get(roleController.retrieveAllRoles);
 
-adminRoutes.route('/deleteUser').delete(ensureAuth(), checkPermissions('DeleteUser'), adminController.deleteUser);
+adminRoutes.route('/roles/deleteRole').delete(ensureAuth(), checkPermissions('DeleteRole'), roleController.deleteRole);
 
-adminRoutes.route('/editUserData').patch(ensureAuth(), checkPermissions('EditUser'), adminController.editUserByID);
+adminRoutes.route('/users/retrieveAllUsers').get(ensureAuth(), checkPermissions('RetrieveAllUsers'), adminController.retrieveAll);
+
+adminRoutes.route('/users/retrieveOneUser').get(ensureAuth(), checkPermissions('RetrieveAllUsers'), adminController.retrieveOne);
+
+adminRoutes.route('/users/deleteUser').delete(ensureAuth(), checkPermissions('DeleteUser'), adminController.deleteUser);
+
+adminRoutes.route('/users/editUserData').patch(ensureAuth(), checkPermissions('EditUser'), adminController.editUserByID);
+
 export default adminRoutes;

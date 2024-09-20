@@ -49,10 +49,11 @@ export class UsersComponent implements OnInit {
     });
 
     const editUserData = await dialogRef.afterClosed().toPromise();
-    console.log(editUserData);
     if (editUserData) {
       const response = await this.adminService.editUserData(editUserData);
+      await this.refreshDataSource();
       console.log('Edit user data:', response);
+      // add banner
     } else {
       return;
     }
