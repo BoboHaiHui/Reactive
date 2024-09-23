@@ -1,15 +1,16 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { permissions } from 'src/admin/components/permissions/permissions';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { IRole } from 'src/admin/interfaces/role.interface';
+import { permissions } from '../../permissions/permissions';
+import { UpdateRoleDialogComponent } from '../update-role-dialog/update-role-dialog/update-role-dialog.component';
 
 @Component({
-  selector: 'app-update-role-dialog',
-  templateUrl: './update-role-dialog.component.html',
-  styleUrls: ['./update-role-dialog.component.css']
+  selector: 'app-create-role-dialog',
+  templateUrl: './create-role-dialog.component.html',
+  styleUrls: ['./create-role-dialog.component.css']
 })
-export class UpdateRoleDialogComponent {
-  public editRoleData: IRole;
+export class CreateRoleDialogComponent {
+  public editRoleData: any;
   public permissionsList = permissions;
   public rolePermissions: { [key: string]: boolean } = {};
 
@@ -23,15 +24,6 @@ export class UpdateRoleDialogComponent {
     this.permissionsList.forEach(permission => {
       this.rolePermissions[permission] = false;
     });
-
-    // Then, check the current role's permissions and mark them as true
-    if (this.editRoleData.permissions) {
-      this.editRoleData.permissions.forEach(permission => {
-        if (this.rolePermissions.hasOwnProperty(permission)) {
-          this.rolePermissions[permission] = true; // Mark as checked if the permission is found
-        }
-      });
-    }
   }
 
   onSave(): void {

@@ -90,6 +90,7 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
   }
 
   async update(tableName: string, model: any, field: string, value: any): Promise<TModel> {
+    console.log('MODEL!!!!', model);
     let connection;
     try {
       connection = await this.pool.getConnection();

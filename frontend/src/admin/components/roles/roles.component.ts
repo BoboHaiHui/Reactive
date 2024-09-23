@@ -10,6 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { permissions } from '../permissions/permissions';
 import { RoleService } from 'src/admin/services/role.service';
 import { UpdateRoleDialogComponent } from '../dialogs/update-role-dialog/update-role-dialog/update-role-dialog.component';
+import { CreateRoleDialogComponent } from '../dialogs/create-role-dialog/create-role-dialog.component';
 
 @Component({
   selector: 'app-roles',
@@ -18,7 +19,7 @@ import { UpdateRoleDialogComponent } from '../dialogs/update-role-dialog/update-
 })
 export class RolesComponent {
   dataSource: MatTableDataSource<IFullProfileUserData>;
-  displayedColumns: string[] = ['id', 'type', 'description', 'permissions', 'actions'];
+  displayedColumns: string[] = ['nr', 'id', 'type', 'description', 'permissions', 'actions'];
   maxNrPermissions = permissions.length;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -50,10 +51,32 @@ export class RolesComponent {
     });
 
     const editRoleData = await dialogRef.afterClosed().toPromise();
+    console.log('editRoleData', editRoleData);
     if (editRoleData) {
       const response = await this.roleService.updateRole(editRoleData);
       await this.refreshDataSource();
       console.log('Edit role data:', response);
+      // add banner
+    } else {
+      return;
+    }
+    return;
+  }
+
+  async createRole() {
+    const dialogRef = this.dialog.open(CreateRoleDialogComponent, {
+      width: '550px',
+      disableClose: true,
+      autoFocus: false,
+      // data: { type: 'Add a name', permissions: [], description: 'Add a description' }
+    });
+
+    const createRoleData = await dialogRef.afterClosed().toPromise();
+    console.log('createRoleData', createRoleData);
+    if (createRoleData) {
+      const response = await this.roleService.createRole(createRoleData);
+      await this.refreshDataSource();
+      console.log('Create role data:', response);
       // add banner
     } else {
       return;

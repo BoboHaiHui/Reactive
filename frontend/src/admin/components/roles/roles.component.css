@@ -1,7 +1,15 @@
-.users-container {
-  margin: 24px 0;
-  padding: 12px 12px;
-  width: 50%;
+.role-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-side {
+  margin: 10px;
+}
+
+.right-side {
+  margin: 10px;
 }
 
 table {

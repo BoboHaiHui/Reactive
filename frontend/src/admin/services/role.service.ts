@@ -37,12 +37,28 @@ export class RoleService {
       description: editRoleData.description,
       permissions: editRoleData.permissions
     };
-    console.log('BODY', body);
     try {
       const response: any = await this.http.patch(url, body, options).toPromise();
       return response.status;
     } catch (error) {
       console.log('An error occurred while edidting user role:', error);
+      throw error;
+    }
+  }
+
+  public async createRole(editRoleData: any): Promise<any> {
+    const url: string = 'http://localhost:4000/admin/roles/createRole';
+    const options = { observe: 'response' as const, withCredentials: true };
+    const body: any = {
+      type: editRoleData.type,
+      description: editRoleData.description,
+      permissions: editRoleData.permissions
+    };
+    try {
+      const response: any = await this.http.post(url, body, options).toPromise();
+      return response.status;
+    } catch (error) {
+      console.log('An error occurred while creating user role:', error);
       throw error;
     }
   }

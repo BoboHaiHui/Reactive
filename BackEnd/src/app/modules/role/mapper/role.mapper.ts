@@ -1,6 +1,7 @@
 import { BaseMapper } from '../../../shared/mapper/base.mapper';
 import { IDBConnection } from '../../../shared/services/DB/DBConnection.interface';
 import logger from '../../../shared/services/logger/logger.service';
+import { IRole } from '../domain/interface/role.interface';
 import { Role } from '../domain/model/role';
 
 export class RoleMapper extends BaseMapper<Role> {
@@ -25,7 +26,7 @@ export class RoleMapper extends BaseMapper<Role> {
     }
   }
 
-  async updateRoleByType(updateRoleData): Promise<boolean> {
+  async updateRoleByType(updateRoleData: IRole): Promise<boolean> {
     const tableName = 'roles';
     const model = {
       description: updateRoleData.description,
@@ -34,9 +35,13 @@ export class RoleMapper extends BaseMapper<Role> {
     };
     const field = 'type';
     const value = updateRoleData.type;
-    const response = await this.update(tableName, model, field, value);
-    if (response) {
-      return true;
+    if (value != 'admin') {
+      const response = await this.update(tableName, model, field, value);
+      if (response) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }

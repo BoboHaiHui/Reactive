@@ -7,15 +7,15 @@
           <td>
             <mat-form-field class="example-full-width">
               <mat-label>Role Name</mat-label>
-              <input matInput value="{{ editRoleData.type }}" name="roleName" disabled="true" />
+              <input matInput [(ngModel)]="editRoleData.type" name="roleName" />
             </mat-form-field>
           </td>
-          <td>
+          <!-- <td>
             <mat-form-field class="example-full-width">
               <mat-label>Role Id</mat-label>
               <input matInput value="{{ editRoleData.roleId }}" disabled="true" />
             </mat-form-field>
-          </td>
+          </td> -->
         </tr>
       </table>
 

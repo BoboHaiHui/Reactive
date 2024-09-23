@@ -17,11 +17,21 @@ import { UsersComponent } from './components/users/users.component';
 import { AdminService } from './services/admin.service';
 import { RoleService } from './services/role.service';
 import { UpdateRoleDialogComponent } from './components/dialogs/update-role-dialog/update-role-dialog/update-role-dialog.component';
+import { CreateRoleDialogComponent } from './components/dialogs/create-role-dialog/create-role-dialog.component';
 
 @NgModule({
   imports: [HttpClientModule, CommonModule, AngularMaterialModule, RouterModule.forChild(AdminRoutes), SharedModule, FormsModule],
   exports: [],
   providers: [AdminService, RoleService],
-  declarations: [AdminComponent, AdminNavbarComponent, UsersComponent, RolesComponent, SettingsComponent, UpdateUserDialogComponent, UpdateRoleDialogComponent]
+  declarations: [
+    AdminComponent,
+    AdminNavbarComponent,
+    UsersComponent,
+    RolesComponent,
+    SettingsComponent,
+    UpdateUserDialogComponent,
+    UpdateRoleDialogComponent,
+    CreateRoleDialogComponent
+  ]
 })
 export class AdminModule {}

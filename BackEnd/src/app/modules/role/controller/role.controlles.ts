@@ -6,6 +6,7 @@ import { Role } from '../domain/model/role';
 async function createRole(req, res) {
   const rawUserData: Role = req.body;
   let insertedRole: string;
+  console.log('&&&&&&', req);
   try {
     insertedRole = await roleService.createRole(rawUserData);
   } catch (error) {
@@ -69,7 +70,7 @@ async function updateRoleByType(req, res) {
 async function deleteRole(req, res) {
   const rawData: any = req.body;
   try {
-    let deleteRole = await roleService.deleteRole(req.body.type);
+    let deleteRole = await roleService.deleteRole(rawData.value.type);
     if (deleteRole) {
       res.status(204).json({ statusText: 'success', data: null });
     } else {

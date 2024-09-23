@@ -15,7 +15,7 @@ adminRoutes.route('/roles/retrieveRoleById').get(roleController.retrieveRoleById
 
 adminRoutes.route('/roles/retrieveAllRoles').get(roleController.retrieveAllRoles);
 
-adminRoutes.route('/roles/deleteRole').delete(ensureAuth(), checkPermissions('DeleteRole'), roleController.deleteRole);
+adminRoutes.route('/roles/deleteRoleByType').delete(ensureAuth(), checkPermissions('DeleteRole'), roleController.deleteRole);
 
 adminRoutes.route('/users/retrieveAllUsers').get(ensureAuth(), checkPermissions('RetrieveAllUsers'), adminController.retrieveAll);
 
