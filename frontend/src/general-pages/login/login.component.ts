@@ -3,6 +3,7 @@ import { ILoginData } from 'src/shared/services/profile.service.interface';
 
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { BannerService } from 'src/shared/services/banner.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit {
   reactiveForm: FormGroup;
   loginData: ILoginData;
 
-  constructor(private profileService: ProfileService) {}
+  constructor(private profileService: ProfileService, private bannerService: BannerService) {}
 
   ngOnInit(): void {
     this.reactiveForm = new FormGroup({
@@ -27,15 +28,25 @@ export class LoginComponent implements OnInit {
   }
 
   async onSubmit() {
-    this.loginData = {
-      email: this.reactiveForm.value.email,
-      password: this.reactiveForm.value.password
-    };
-    await this.login();
+    if (this.reactiveForm.valid) {
+      this.loginData = {
+        email: this.reactiveForm.value.email,
+        password: this.reactiveForm.value.password
+      };
+      await this.login();
+    } else {
+      this.bannerService.showBanner('Please fill in all fields correctly.', 'warning'); // Show warning if the form is invalid
+    }
   }
 
   async login() {
     const url = 'http://localhost:4000/user/login';
-    await this.profileService.login(url, this.loginData);
+    try {
+      const response = await this.profileService.login(url, this.loginData);
+      console.log('Login response:', response);
+    } catch (error) {
+      console.error('Login failed:', error.message);
+      this.bannerService.showBanner('Login failed. Please check your credentials and try again.', 'error'); // Trigger the banner on failure
+    }
   }
 }

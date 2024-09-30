@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
 import { ActivateAccountComponent } from '../general-pages/activate-account/activate-account.component';
 import { AppRouteModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { SharedModule } from 'src/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { AppComponent } from './app.component';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule,
-    AdminModule
+    AdminModule,
+    SharedModule
   ],
   providers: [ProfileService],
   bootstrap: [AppComponent]

@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   imports: [
@@ -25,7 +26,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatIconModule,
     MatDialogModule,
     MatListModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSnackBarModule
   ],
   exports: [
     MatButtonModule,

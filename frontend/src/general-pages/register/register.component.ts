@@ -14,6 +14,7 @@ export class RegisterComponent implements OnInit {
   reactiveForm: FormGroup;
   registerData: IRegisterData;
   userRegistered: boolean = false;
+  disableButton: boolean = false;
   constructor(private profileService: ProfileService, private router: Router) {}
 
   ngOnInit(): void {
@@ -38,7 +39,10 @@ export class RegisterComponent implements OnInit {
       password: this.reactiveForm.value.password,
       terms: this.reactiveForm.value.terms
     };
+    console.log(this.registerData);
+    console.log('Form: ', this.reactiveForm);
     this.register();
+    // this.disableButton = true;
   }
 
   async register() {

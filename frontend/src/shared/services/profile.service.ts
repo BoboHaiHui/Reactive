@@ -55,7 +55,7 @@ export class ProfileService {
     }
   }
 
-  public async login(url: string, loginData: ILoginData): Promise<void> {
+  public async login(url: string, loginData: ILoginData): Promise<any> {
     const userCredentials: ILoginData = {
       email: loginData.email,
       password: loginData.password
@@ -67,12 +67,14 @@ export class ProfileService {
       if (res.status === 201) {
         this.profileStore.setUserProfileData(res.body?.userData);
         this.navigateToRoleMenu(this.profileStore.getUserProfileData().roleId);
+        return res;
       } else {
-        console.log('Something went wrong.');
+        console.log(res);
+        throw new Error('Login failed');
       }
-    } catch {
-      console.error('Internal server error');
-      throw new Error('Internal server error');
+    } catch (error) {
+      console.error('Error occurred during login:', error);
+      throw error;
     }
   }
 

@@ -1,0 +1,4 @@
+<div *ngIf="banner.isVisible" [ngClass]="banner.type" class="banner">
+  <span>{{ banner.message }}</span>
+  <button (click)="closeBanner()"><mat-icon aria-label="Close button" fontIcon="cancel"></mat-icon></button>
+</div>

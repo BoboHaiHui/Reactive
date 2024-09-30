@@ -1,43 +1,44 @@
 <div class="register-container">
   <div class="form-container" *ngIf="!userRegistered">
     <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
-      <label for="firstName"> FirstName </label><br />
-      <input
-        type="text"
-        id="firstname"
-        placeholder=" John"
-        formControlName="firstName"
-      />
-      <br /><br />
-      <label for="lastName"> LastName </label><br />
-      <input
-        type="text"
-        id="lastname"
-        placeholder=" Doe"
-        formControlName="lastName"
-      />
-      <br /><br />
-      <label for="email"> Email </label><br />
-      <input
-        type="text"
-        id="email"
-        placeholder=" JohnDoe@domaine.name"
-        formControlName="email"
-      />
-      <br /><br />
-      <label for="pass"> Password </label><br />
-      <input
-        type="text"
-        id="pass"
-        placeholder=" ****** "
-        formControlName="password"
-      />
-      <br /><br />
-      <label for="terms"> Terms and conditions </label>
+      <label for="firstName">FirstName</label><br />
+      <input type="text" id="firstname" placeholder="John" formControlName="firstName" />
+      <p *ngIf="reactiveForm.controls['firstName'].touched && reactiveForm.controls['firstName'].status == 'INVALID'" class="form-error">
+        Field is required
+      </p>
+
+      <label for="lastName">LastName</label><br />
+      <input type="text" id="lastname" placeholder="Doe" formControlName="lastName" />
+      <p *ngIf="reactiveForm.controls['lastName'].touched && reactiveForm.controls['lastName'].status == 'INVALID'" class="form-error">
+        Field is required
+      </p>
+
+      <label for="email">Email</label><br />
+      <input type="text" id="email" placeholder="JohnDoe@domaine.name" formControlName="email" />
+      <p
+        *ngIf="
+          reactiveForm.controls['email'].touched &&
+          !reactiveForm.controls['email'].value &&
+          reactiveForm.controls['email'].status == 'INVALID'
+        "
+        class="form-error"
+      >
+        Field is required
+      </p>
+      <p *ngIf="reactiveForm.controls['email'].dirty && reactiveForm.controls['email'].status == 'INVALID'" class="form-error">
+        Not a valid email adress
+      </p>
+
+      <label for="pass">Password</label><br />
+      <input type="text" id="pass" placeholder="******" formControlName="password" />
+
+      <label for="terms">Terms and conditions</label>
       <input type="checkbox" id="terms" formControlName="terms" />
-      <br /><br />
-      <input type="submit" value="Register" id="btn" />
+
+      <input type="submit" value="Register" id="btn" [disabled]="disableButton || userRegistered" />
     </form>
+
+    <div class="success-message" *ngIf="userRegistered">Registration successful!</div>
   </div>
   <div class="success-message" *ngIf="userRegistered">
     <p>User was created</p>
