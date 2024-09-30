@@ -1,47 +1,56 @@
 <div class="register-container">
   <div class="form-container" *ngIf="!userRegistered">
     <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
-      <label for="firstName">FirstName</label><br />
-      <input type="text" id="firstname" placeholder="John" formControlName="firstName" />
-      <p *ngIf="reactiveForm.controls['firstName'].touched && reactiveForm.controls['firstName'].status == 'INVALID'" class="form-error">
-        Field is required
-      </p>
+      <!-- First Name -->
+      <mat-form-field appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input matInput placeholder="John" formControlName="firstName" />
+        <mat-error *ngIf="reactiveForm.get('firstName').hasError('required')">
+          <!-- <mat-error *ngIf="reactiveForm.controls['firstName'].touched && reactiveForm.controls['firstName'].invalid"> -->
+          Field is required
+        </mat-error>
+      </mat-form-field>
 
-      <label for="lastName">LastName</label><br />
-      <input type="text" id="lastname" placeholder="Doe" formControlName="lastName" />
-      <p *ngIf="reactiveForm.controls['lastName'].touched && reactiveForm.controls['lastName'].status == 'INVALID'" class="form-error">
-        Field is required
-      </p>
+      <!-- Last Name -->
+      <mat-form-field appearance="fill">
+        <mat-label>Last Name</mat-label>
+        <input matInput placeholder="Doe" formControlName="lastName" />
+        <mat-error *ngIf="reactiveForm.get('lastName').hasError('required')"> Field is required </mat-error>
+      </mat-form-field>
 
-      <label for="email">Email</label><br />
-      <input type="text" id="email" placeholder="JohnDoe@domaine.name" formControlName="email" />
-      <p
-        *ngIf="
-          reactiveForm.controls['email'].touched &&
-          !reactiveForm.controls['email'].value &&
-          reactiveForm.controls['email'].status == 'INVALID'
-        "
-        class="form-error"
-      >
-        Field is required
-      </p>
-      <p *ngIf="reactiveForm.controls['email'].dirty && reactiveForm.controls['email'].status == 'INVALID'" class="form-error">
-        Not a valid email adress
-      </p>
+      <!-- Email -->
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="JohnDoe@domain.com" formControlName="email" />
+        <mat-error *ngIf="reactiveForm.get('email').hasError('required')"> Field is required </mat-error>
+        <mat-error *ngIf="reactiveForm.get('email').hasError('email')"> Not a valid email </mat-error>
+      </mat-form-field>
 
-      <label for="pass">Password</label><br />
-      <input type="text" id="pass" placeholder="******" formControlName="password" />
+      <!-- Password -->
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="hidePassword ? 'password' : 'text'" placeholder="******" formControlName="password" />
 
-      <label for="terms">Terms and conditions</label>
-      <input type="checkbox" id="terms" formControlName="terms" />
+        <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
+          <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
 
-      <input type="submit" value="Register" id="btn" [disabled]="disableButton || userRegistered" />
+        <mat-error *ngIf="reactiveForm.get('password').hasError('required')"> Field is required </mat-error>
+        <mat-error *ngIf="reactiveForm.controls['password'].dirty && reactiveForm.controls['password'].invalid">
+          Password must be between 8 and 20 characters long, no white spaces and include uppercase, lowercase and numeric characters.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Terms and Conditions -->
+      <mat-checkbox formControlName="terms" color="primary">I accept the terms and conditions</mat-checkbox>
+
+      <!-- Submit Button -->
+      <div>
+        <button mat-raised-button color="primary" type="submit" [disabled]="disableButton || userRegistered">Register</button>
+      </div>
     </form>
 
+    <!-- Success Message -->
     <div class="success-message" *ngIf="userRegistered">Registration successful!</div>
-  </div>
-  <div class="success-message" *ngIf="userRegistered">
-    <p>User was created</p>
-    <p>Please check youre email for account activation</p>
   </div>
 </div>

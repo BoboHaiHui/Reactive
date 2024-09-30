@@ -1,17 +1,34 @@
 <div class="login-container">
-  <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()">
-    <label for="email"> Email </label><br />
-    <input type="text" id="email" placeholder=" JohnDoe@domaine.name" formControlName="email" />
-    <br /><br />
-    <label for="pass"> Password </label><br />
-    <input type="password" id="pass" placeholder=" ****** " formControlName="password" />
-    <br /><br />
-    <input type="submit" value="Login" id="btn" />
+  <form [formGroup]="reactiveForm" (ngSubmit)="onSubmit()" class="form-container">
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput placeholder="JohnDoe@domain.com" formControlName="email" />
+      <mat-error *ngIf="reactiveForm.get('email').hasError('required')"> Field is required </mat-error>
+      <mat-error *ngIf="reactiveForm.get('email').hasError('email')"> Not a valid email </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Password</mat-label>
+      <input matInput [type]="hidePassword ? 'password' : 'text'" placeholder="******" formControlName="password" />
+      <button mat-icon-button matSuffix (click)="togglePasswordVisibility()" type="button">
+        <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+      </button>
+      <mat-error *ngIf="reactiveForm.get('password').hasError('required')"> Field is required </mat-error>
+      <mat-error *ngIf="reactiveForm.controls['password'].dirty && reactiveForm.controls['password'].invalid">
+        The password format seems to be wrong
+      </mat-error>
+    </mat-form-field>
+    <div class="forgot-password">
+      <a routerLink="/register">Forgot password? Click here!</a>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" type="submit">Login</button>
+    </div>
+
+    <div class="register-link">
+      <br />
+      <p>
+        <a routerLink="/register">Don't have an account? Click to register</a>
+      </p>
+    </div>
   </form>
-  <div class="register-link">
-    <br />
-    <p>
-      <a routerLink="/register">Don't have an account? Click to register</a>
-    </p>
-  </div>
 </div>

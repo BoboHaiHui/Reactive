@@ -3,6 +3,7 @@ import { ILoginData } from 'src/shared/services/profile.service.interface';
 
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { PasswordValidator } from 'src/shared/validations/password.validator';
 import { BannerService } from 'src/shared/services/banner.service';
 
 @Component({
@@ -13,18 +14,19 @@ import { BannerService } from 'src/shared/services/banner.service';
 export class LoginComponent implements OnInit {
   reactiveForm: FormGroup;
   loginData: ILoginData;
+  hidePassword: boolean = true;
 
   constructor(private profileService: ProfileService, private bannerService: BannerService) {}
 
   ngOnInit(): void {
     this.reactiveForm = new FormGroup({
-      email: new FormControl(null, [Validators.required, Validators.email, Validators.max(30)]),
-      password: new FormControl(null, [
-        Validators.required,
-        Validators.max(20),
-        Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}')
-      ])
+      email: new FormControl(null, [Validators.required, Validators.email, Validators.max(256)]),
+      password: new FormControl(null, [Validators.required, PasswordValidator])
     });
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 
   async onSubmit() {

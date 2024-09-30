@@ -4,6 +4,7 @@ import { IRegisterData } from 'src/shared/services/profile.service.interface';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { PasswordValidator } from 'src/shared/validations/password.validator';
 
 @Component({
   selector: 'app-register',
@@ -15,20 +16,21 @@ export class RegisterComponent implements OnInit {
   registerData: IRegisterData;
   userRegistered: boolean = false;
   disableButton: boolean = false;
+  hidePassword: boolean = true;
   constructor(private profileService: ProfileService, private router: Router) {}
 
   ngOnInit(): void {
     this.reactiveForm = new FormGroup({
       firstName: new FormControl(null, [Validators.required, Validators.max(30)]),
       lastName: new FormControl(null, [Validators.required, Validators.max(30)]),
-      email: new FormControl(null, [Validators.required, Validators.email, Validators.max(30)]),
-      password: new FormControl(null, [
-        Validators.required,
-        Validators.max(20),
-        Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{8,20}')
-      ]),
+      email: new FormControl(null, [Validators.required, Validators.email, Validators.max(254)]),
+      password: new FormControl(null, [Validators.required, PasswordValidator]),
       terms: new FormControl(null, [Validators.required])
     });
+  }
+
+  togglePasswordVisibility() {
+    this.hidePassword = !this.hidePassword;
   }
 
   onSubmit() {
@@ -39,8 +41,6 @@ export class RegisterComponent implements OnInit {
       password: this.reactiveForm.value.password,
       terms: this.reactiveForm.value.terms
     };
-    console.log(this.registerData);
-    console.log('Form: ', this.reactiveForm);
     this.register();
     // this.disableButton = true;
   }
