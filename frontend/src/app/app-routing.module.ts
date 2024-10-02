@@ -5,8 +5,9 @@ import { ErrorPageComponent } from 'src/general-pages/error-page/error-page.comp
 import { HomeComponent } from 'src/general-pages/home/home.component';
 import { LoginComponent } from 'src/general-pages/login/login.component';
 import { RegisterComponent } from 'src/general-pages/register/register.component';
-import { canActivateAdmin, canActivateUser } from 'src/shared/guards/auth-guards';
+import { RecoverPasswordComponent } from 'src/general-pages/recover-password/recover-password.component';
 
+import { canActivateAdmin, canActivateUser } from 'src/shared/guards/auth-guards';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -17,7 +18,8 @@ const routes: Routes = [
     children: [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
-      { path: 'activate-account/:email', component: ActivateAccountComponent }
+      { path: 'activate-account/:email', component: ActivateAccountComponent },
+      { path: 'recover-password', component: RecoverPasswordComponent }
     ]
   },
   { path: 'contact', component: ContactComponent },

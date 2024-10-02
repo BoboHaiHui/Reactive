@@ -20,6 +20,7 @@ import { ActivateAccountComponent } from '../general-pages/activate-account/acti
 import { AppRouteModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from 'src/shared/shared.module';
+import { RecoverPasswordComponent } from 'src/general-pages/recover-password/recover-password.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { SharedModule } from 'src/shared/shared.module';
     ContactComponent,
     HomeNavbarComponent,
     ErrorPageComponent,
-    ActivateAccountComponent
+    ActivateAccountComponent,
+    RecoverPasswordComponent
   ],
   imports: [
     BrowserModule,
