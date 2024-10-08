@@ -1,4 +1,4 @@
-export interface IBaseMapper<TModel> {
+export interface IBaseMapper<TModel extends object> {
   create(tableName: string, model: TModel): Promise<TModel>;
   retrieve(tableName: string, field: string, value: string | number): Promise<TModel[]>;
   retrieveAll(tableName: string): Promise<TModel[]>;

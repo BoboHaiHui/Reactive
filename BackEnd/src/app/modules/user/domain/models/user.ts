@@ -8,5 +8,5 @@ export class User implements IUser {
   password: string;
   roleId: number;
   blocked: boolean;
-  activation_code: string;
+  password_attempt?: number;
 }

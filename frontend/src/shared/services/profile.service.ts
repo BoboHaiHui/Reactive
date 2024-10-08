@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -63,18 +63,22 @@ export class ProfileService {
     const options = { observe: 'response' as const, withCredentials: true };
     try {
       const res: HttpResponse<any> = await this.http.post(url, userCredentials, options).toPromise();
-
       if (res.status === 201) {
         this.profileStore.setUserProfileData(res.body?.userData);
         this.navigateToRoleMenu(this.profileStore.getUserProfileData().roleId);
         return res;
-      } else {
-        console.log(res);
-        throw new Error('Login failed');
       }
     } catch (error) {
-      console.error('Error occurred during login:', error);
-      throw error;
+      if (error instanceof HttpErrorResponse) {
+        if (error.status === 403 && error.error?.statusText === 'blocked' && error.error?.data === 'MFA required') {
+          return error;
+        } else {
+          throw new Error('Login failed');
+        }
+      } else {
+        console.error('Unexpected error occurred during login:', error);
+        throw error;
+      }
     }
   }
 

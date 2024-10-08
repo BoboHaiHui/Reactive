@@ -6,6 +6,8 @@ import { SessionMapper } from '../../modules/session/mapper/session.mapper';
 import { SessionService } from '../../modules/session/services/session.service';
 import { UserMapper } from '../../modules/user/mapper/user.mapper';
 import { UserService } from '../../modules/user/services/user.service';
+import { ValidationCodesMapper } from '../../modules/validation-codes/mapper/validation-codes.mapper';
+import { ValidationCodeService } from '../../modules/validation-codes/services/validation-code.service';
 import { BaseMapper } from '../mapper/base.mapper';
 import { BaseService } from '../services/base.service';
 import { MYSQL } from '../services/DB/mysql-connection.service';
@@ -66,6 +68,16 @@ function createEmailService(): EmailService {
   return new EmailService();
 }
 
+// Factory function to create an instance of RoleMapper
+function createValidationCodesMapper(): ValidationCodesMapper {
+  return new ValidationCodesMapper(connectionDB);
+}
+
+function createValidationCodesService(): ValidationCodeService {
+  const validationCodesMapper = createValidationCodesMapper();
+  return new ValidationCodeService(validationCodesMapper);
+}
+
 // Export the created instances
 const baseMapper = createBaseMapper();
 const baseService = createBaseService();
@@ -78,6 +90,7 @@ const roleService = createRoleService();
 // const sessionMapper = createSessionMapper();
 const sessionService = createSessionService();
 const emailService = createEmailService();
+const validationCodesService = createValidationCodesService();
 
 export {
   baseMapper,
@@ -89,5 +102,6 @@ export {
   connectionDB,
   roleService,
   sessionService,
-  emailService
+  emailService,
+  validationCodesService
 };

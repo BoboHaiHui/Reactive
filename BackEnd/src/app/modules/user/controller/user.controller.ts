@@ -1,14 +1,14 @@
 import { userService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
 import {
-  IActivateAccountrData,
+  IActivateAccountData,
   ILoginInput,
   IRegisterInput,
   IResponceMessage,
+  IUnblockAccountData,
   IUpdateProfileInput,
   IUserProfileData
 } from '../domain/interface/input/userRegisterInput.interface';
-import { User } from '../domain/models/user';
 
 async function register(req, res) {
   const rawRegisterData: IRegisterInput = req.body;
@@ -27,7 +27,7 @@ async function register(req, res) {
 }
 
 async function activateAccount(req, res) {
-  const rawActivateAccountData: IActivateAccountrData = req.body;
+  const rawActivateAccountData: IActivateAccountData = req.body;
   let responseMessage: IResponceMessage;
   try {
     responseMessage = await userService.activateAccount(rawActivateAccountData.email, rawActivateAccountData.activationCode);
@@ -52,8 +52,10 @@ async function login(req, res) {
       res.cookie('sessionId', sessionId, { domain: 'localhost', httpOnly: true, secure: true, samesite: 'strict' });
       responseMessage.data = 'Login successful';
       res.status(201).json(responseMessage);
+    } else if (responseMessage.statusText === 'blocked' && responseMessage.data === 'MFA required') {
+      res.status(403).json({ statusText: 'blocked', data: 'MFA required' });
     } else {
-      res.status(422).json(responseMessage);
+      res.status(422).json({ statusText: 'fail', data: 'login error' });
     }
   } catch (error) {
     logger.error(error.message, { description: 'login error', securityFlag: true, severity: 7 });
@@ -91,6 +93,25 @@ async function updateProfile(req, res) {
   }
 }
 
+async function unblockAccount(req, res) {
+  const rawUnblockAccountData: IUnblockAccountData = req.body;
+  let responseMessage: IResponceMessage;
+  try {
+    responseMessage = await userService.unblockAccount(rawUnblockAccountData.email, rawUnblockAccountData.unblockCode);
+    if (responseMessage.statusText === 'success') {
+      const sessionId = responseMessage.data;
+      res.cookie('sessionId', sessionId, { domain: 'localhost', httpOnly: true, secure: true, samesite: 'strict' });
+      responseMessage.data = 'Login successful';
+      res.status(201).json(responseMessage);
+    } else {
+      res.status(422).json(responseMessage);
+    }
+  } catch (error) {
+    logger.error(error.message, { description: 'unblock account error', securityFlag: false, severity: 7 });
+    res.status(500).json({ statusText: 'fail', data: null });
+  }
+}
+
 async function logout(req, res) {
   let responseMessage: IResponceMessage;
   const sessionId: string = req.sessionData ? req.sessionData[0].sessionId : '';
@@ -108,5 +129,6 @@ export const userController = {
   updateProfile: updateProfile,
   logout: logout,
   sendUserProfileData: sendUserProfileData,
-  activateAccount: activateAccount
+  activateAccount: activateAccount,
+  unblockAccount: unblockAccount
 };

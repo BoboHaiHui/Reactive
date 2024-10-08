@@ -9,8 +9,9 @@ export class SessionMapper extends BaseMapper<Session> {
     super(dbConnection);
   }
   async createSession(sessionData: Session): Promise<void> {
-    let connection = await this.pool.getConnection();
+    let connection;
     try {
+      connection = await this.pool.getConnection();
       const sql = 'INSERT INTO sessions SET ?';
       const inserts = [sessionData];
       const query = this.pool.format(sql, inserts);
@@ -20,13 +21,16 @@ export class SessionMapper extends BaseMapper<Session> {
       logger.critical(error, { description: 'session.mapper --> create session error', securityFlag: false, severity: 7 });
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 
   async deleteSession(field: string, value: string | number) {
-    let connection = await this.pool.getConnection();
+    let connection;
     try {
+      connection = await this.pool.getConnection();
       const sql = 'DELETE FROM sessions WHERE ??=?';
       const inserts = [field, value];
       const query = this.pool.format(sql, inserts);
@@ -36,7 +40,9 @@ export class SessionMapper extends BaseMapper<Session> {
       logger.critical(error, { description: 'session.mapper --> delete session error', securityFlag: false, severity: 7 });
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 
@@ -75,8 +81,9 @@ export class SessionMapper extends BaseMapper<Session> {
   }
 
   async sessionExists(sessionId: string): Promise<boolean> {
-    let connection = await this.pool.getConnection();
+    let connection;
     try {
+      connection = await this.pool.getConnection();
       const sql = 'SELECT COUNT(*) AS count FROM sessions WHERE sessionId=?';
       const inserts = [sessionId];
       const query = this.pool.format(sql, inserts);
@@ -86,7 +93,9 @@ export class SessionMapper extends BaseMapper<Session> {
     } catch (error) {
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 

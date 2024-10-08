@@ -38,9 +38,14 @@ export interface IEditUserData {
   blocked: boolean;
 }
 
-export interface IActivateAccountrData {
+export interface IActivateAccountData {
   email: string;
   activationCode: string;
+}
+
+export interface IUnblockAccountData {
+  email: string;
+  unblockCode: string;
 }
 
 export interface IUpdateProfileInput {

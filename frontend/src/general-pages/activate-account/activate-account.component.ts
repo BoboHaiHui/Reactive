@@ -29,7 +29,6 @@ export class ActivateAccountComponent implements OnInit {
       this.profileService
         .activate_account(this.activateEmail, activateCode)
         .then(response => {
-          console.log('ok', response);
           if (response) {
             //toaster message here: Account has been activate. Please Login
             this.router.navigateByUrl('login');

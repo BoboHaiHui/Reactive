@@ -1,10 +1,7 @@
 import bcrypt from 'bcryptjs';
-import { randomBytes } from 'crypto';
-
 import config from '../../../../config';
-import { emailService, sessionService } from '../../../shared/diContainer/diContainer';
+import { emailService, sessionService, validationCodesService } from '../../../shared/diContainer/diContainer';
 import logger from '../../../shared/services/logger/logger.service';
-import { generateRandomBytes } from '../../../shared/utils/randomBytes';
 import { utils } from '../../../shared/utils/validations';
 import {
   ILoginInput,
@@ -15,6 +12,7 @@ import {
 } from '../domain/interface/input/userRegisterInput.interface';
 import { User } from '../domain/models/user';
 import { UserMapper } from '../mapper/user.mapper';
+import { ValidationCodeType } from '../../validation-codes/domain/interface/validation-codes.enum';
 
 export class UserService {
   private responseMessage: IResponceMessage | IUserProfileData;
@@ -23,15 +21,13 @@ export class UserService {
 
   async register(rawRegisterData: IRegisterInput): Promise<IResponceMessage> {
     const tableName = 'users';
-    let mapperResponce: boolean;
     let registerData: User = {
       firstName: '',
       lastName: '',
       email: '',
       password: '',
       roleId: config.user.defaultUserId,
-      blocked: config.user.blocked,
-      activation_code: ''
+      blocked: config.user.blocked
     };
     let emailInUse: boolean;
 
@@ -66,13 +62,13 @@ export class UserService {
       registerData.firstName = rawRegisterData.firstName;
       registerData.lastName = rawRegisterData.lastName;
       registerData.email = rawRegisterData.email;
-      registerData.activation_code = await generateRandomBytes(config.user.activationCodeLength);
-      registerData.password = await bcrypt.hash(rawRegisterData.password + config.user.password_sufix, 10);
-      mapperResponce = await this.userMapper.register(tableName, registerData);
 
-      if (mapperResponce) {
-        await emailService.sendMail(registerData.email, 'Activate Reactive Accout', 'activate_account', [
-          registerData.activation_code,
+      registerData.password = await bcrypt.hash(rawRegisterData.password + config.user.password_sufix, 10);
+      const userID = await this.userMapper.register(tableName, registerData);
+      const activateAccountCode = await validationCodesService.createActivateAccountCode(userID);
+      if (userID && activateAccountCode) {
+        await emailService.sendMail(registerData.email, 'Activate Reactive Account', 'activate_account', [
+          activateAccountCode,
           registerData.email
         ]);
         this.responseMessage = { statusText: 'success', data: 'User was created. Please access the email to activate account' };
@@ -86,18 +82,22 @@ export class UserService {
     }
   }
 
-  async activateAccount(user_email: string, activation_code: any): Promise<IResponceMessage> {
+  async activateAccount(user_email: string, activation_code: string): Promise<IResponceMessage> {
     try {
-      let dbActivationCode = await this.userMapper.getUserActivationCode(user_email);
-      if (dbActivationCode === activation_code && dbActivationCode != null) {
+      const userId: number = await this.userMapper.getUserIdByEmail(user_email);
+      const isCodeValid = await validationCodesService.isCodeValid(userId, activation_code);
+      if (isCodeValid) {
         const response = await this.userMapper.activateAccount(user_email);
         if (response) {
-          this.responseMessage = { statusText: 'success', data: null };
-        } else {
-          this.responseMessage = { statusText: 'fail', data: null };
+          this.responseMessage = { statusText: 'success', data: 'Account was activated' };
+          await validationCodesService.markAsUsed(userId);
+          return this.responseMessage;
         }
+        this.responseMessage = { statusText: 'fail', data: 'Account was not activated' };
         return this.responseMessage;
       }
+      this.responseMessage = { statusText: 'fail', data: 'Activation Code is not valid!' };
+      return this.responseMessage;
     } catch (error) {
       logger.debug('Activation error');
       throw error;
@@ -118,18 +118,38 @@ export class UserService {
     try {
       checkUser = await this.userMapper.retrieveOne('users', 'email', rawLoginData.email);
       if (!Object.keys(checkUser).length) {
-        this.responseMessage = { statusText: 'fail', data: 'Wrong email or password' };
+        this.responseMessage = { statusText: 'fail', data: 'Login failed' };
         return this.responseMessage;
       }
-      if (!(await bcrypt.compare(rawLoginData.password + config.user.password_sufix, checkUser[0].password))) {
-        this.responseMessage = { statusText: 'fail', data: 'Wrong email or password' };
+
+      const checkPassStatus = await bcrypt.compare(rawLoginData.password + config.user.password_sufix, checkUser[0].password);
+
+      if (!checkPassStatus && !checkUser[0].blocked) {
+        this.responseMessage = { statusText: 'fail', data: 'Login failed' };
+        if (checkUser[0].password_attempts < config.user.password_attempts) {
+          await this.userMapper.updatePasswordAttempts(checkUser[0].email, checkUser[0].password_attempts + 1);
+        } else {
+          await this.userMapper.blockAccount(checkUser[0].email);
+
+          logger.warning({ description: `User account ${checkUser[0]} has been blocked1`, severity: 5, securityFlag: true });
+          const unblockCode = await validationCodesService.createUnblockAccountCode(checkUser[0].id, ValidationCodeType.blockAccount);
+          if (unblockCode) {
+            await emailService.sendMail(checkUser[0].email, 'Blocked account', 'block_account_info');
+          }
+        }
+        return this.responseMessage;
+      } else if (checkPassStatus && checkUser[0].blocked) {
+        this.responseMessage = { statusText: 'blocked', data: 'MFA required' };
+        return this.responseMessage;
+      } else if (!checkPassStatus && checkUser[0].blocked) {
+        this.responseMessage = { statusText: 'fail', data: 'Login failed' };
         return this.responseMessage;
       }
-      if (checkUser[0].blocked) {
-        this.responseMessage = { statusText: 'fail', data: 'User is blocked! Please contact our support team' };
-        return this.responseMessage;
-      }
+
       sessionCookie = await sessionService.createSession(checkUser[0]);
+      if (checkUser[0].password_attempts > 0 && checkUser[0].password_attempts < config.user.password_attempts) {
+        this.userMapper.updatePasswordAttempts(checkUser[0].email, 0);
+      }
     } catch (error) {
       logger.debug('user.service ---> login error', error);
       throw error();
@@ -145,6 +165,40 @@ export class UserService {
       }
     };
     return this.responseMessage;
+  }
+
+  // add logic to the method
+  async unblockAccount(user_email: string, unblock_code: string): Promise<IResponceMessage> {
+    let checkUser: User;
+    let sessionCookie: string;
+    try {
+      const userId: number = await this.userMapper.getUserIdByEmail(user_email);
+      const isCodeValid = await validationCodesService.isCodeValid(userId, unblock_code);
+
+      if (isCodeValid) {
+        await this.userMapper.activateAccount(user_email);
+        checkUser = await this.userMapper.retrieveOne('users', 'email', user_email);
+        sessionCookie = await sessionService.createSession(checkUser[0]);
+        this.responseMessage = {
+          statusText: 'success',
+          data: sessionCookie,
+          userData: {
+            firstName: checkUser[0].firstName,
+            lastName: checkUser[0].lastName,
+            email: checkUser[0].email,
+            roleId: checkUser[0].roleId
+          }
+        };
+        await this.userMapper.activateAccount(user_email);
+        await validationCodesService.markAsUsed(userId);
+        return this.responseMessage;
+      }
+      this.responseMessage = { statusText: 'fail', data: 'Code is not valid!' };
+      return this.responseMessage;
+    } catch (error) {
+      logger.debug('Unblock Account error');
+      throw error;
+    }
   }
 
   async logout(sessionId: string): Promise<IResponceMessage> {

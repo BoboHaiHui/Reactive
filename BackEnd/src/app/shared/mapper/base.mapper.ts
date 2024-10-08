@@ -3,8 +3,9 @@ import mysql from 'mysql2/promise'; // Import the mysql package
 import { IDBConnection } from '../services/DB/DBConnection.interface';
 import logger from '../services/logger/logger.service';
 import { IBaseMapper } from './base.mapper.interface';
+import { IBaseModel } from '../domain/baseModel.interface';
 
-export class BaseMapper<TModel> implements IBaseMapper<TModel> {
+export class BaseMapper<TModel extends IBaseModel> implements IBaseMapper<TModel> {
   protected model: any;
   protected dbConnection: IDBConnection;
   protected pool: mysql.Pool;
@@ -26,13 +27,17 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       const inserts = [tableName, model];
       const query = this.pool.format(sql, inserts);
       const [rows, fields] = await connection.execute(query);
+      model.id = rows.insertId;
+
       logger.debug('Inserted row:', rows);
       return model;
     } catch (error) {
       logger.critical(error, { description: 'base.mapper --> create error', securityFlag: false, severity: 7 });
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 
@@ -50,7 +55,9 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       logger.critical(error, { description: 'base.mapper-retrieveAll error', securityFlag: false, severity: 5 });
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 
@@ -68,7 +75,9 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       logger.critical(error, { description: 'base.mapper-retrieveAll error', securityFlag: false, severity: 5 });
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 
@@ -85,12 +94,13 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       logger.critical(error, { description: 'base.mapper-retrieveAll error', securityFlag: false, severity: 5 });
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 
   async update(tableName: string, model: any, field: string, value: any): Promise<TModel> {
-    console.log('MODEL!!!!', model);
     let connection;
     try {
       connection = await this.pool.getConnection();
@@ -106,7 +116,9 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       logger.critical(error, { description: 'base.mapper-update error', securityFlag: false, severity: 7 });
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 
@@ -124,7 +136,9 @@ export class BaseMapper<TModel> implements IBaseMapper<TModel> {
       logger.critical(error, { description: 'base.mapper-delete error', securityFlag: false, severity: 7 });
       throw error;
     } finally {
-      connection.release();
+      if (connection) {
+        connection.release();
+      }
     }
   }
 }

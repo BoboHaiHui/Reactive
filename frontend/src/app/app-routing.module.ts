@@ -1,5 +1,6 @@
 import { AdminComponent } from 'src/admin/admin.component';
 import { ActivateAccountComponent } from 'src/general-pages/activate-account/activate-account.component';
+import { MFAComponent } from 'src/general-pages/MFA/MFA.component';
 import { ContactComponent } from 'src/general-pages/contact/contact.component';
 import { ErrorPageComponent } from 'src/general-pages/error-page/error-page.component';
 import { HomeComponent } from 'src/general-pages/home/home.component';
@@ -19,6 +20,7 @@ const routes: Routes = [
       { path: 'login', component: LoginComponent },
       { path: 'register', component: RegisterComponent },
       { path: 'activate-account/:email', component: ActivateAccountComponent },
+      { path: 'MFA/:email', component: MFAComponent },
       { path: 'recover-password', component: RecoverPasswordComponent }
     ]
   },

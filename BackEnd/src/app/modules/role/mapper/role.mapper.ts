@@ -13,8 +13,9 @@ export class RoleMapper extends BaseMapper<Role> {
     const sql = 'INSERT INTO ?? (type, description, permissions) VALUES (?, ?, ?)';
     const permissionsFormated = JSON.stringify(roleData.permissions);
     const inserts = [tableName, roleData.type, roleData.description, permissionsFormated];
+    let connection;
     try {
-      let connection = await this.pool.getConnection();
+      connection = await this.pool.getConnection();
       const query = this.pool.format(sql, inserts);
       const [rows] = await connection.execute(query);
       logger.debug('Inserted role:', rows);
@@ -23,6 +24,10 @@ export class RoleMapper extends BaseMapper<Role> {
     } catch (error) {
       logger.critical(error, { description: 'role.mapper-create role error', securityFlag: false, severity: 7 });
       throw error;
+    } finally {
+      if (connection) {
+        connection.release();
+      }
     }
   }
 

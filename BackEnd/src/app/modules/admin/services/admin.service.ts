@@ -12,7 +12,7 @@ export class AdminService {
 
     // Map each user object and create a new object without the 'password' and 'activationCode' properties
     const sanitizedUsers: IFullProfileUserData[] = rawAllUsers.map(user => {
-      const { password, activation_code, ...sanitizedUser } = user;
+      const { password, ...sanitizedUser } = user;
       return sanitizedUser;
     });
 

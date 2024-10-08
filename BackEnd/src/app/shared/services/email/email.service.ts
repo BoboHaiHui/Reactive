@@ -1,7 +1,7 @@
 import sgMail from '@sendgrid/mail';
 
 import config from '../../../../config';
-import { activate_account } from './templates/templates';
+import { activate_account, block_account_info, unblock_account } from './templates/templates';
 
 export class EmailService {
   constructor() {
@@ -23,8 +23,15 @@ export class EmailService {
 
   public emailData(user_email: string, email_subject: string, template: string, data?: any) {
     let text_data: string;
-    if (template == 'activate_account') {
+    // let html_data: string;
+    if (template === 'activate_account') {
       text_data = activate_account(data);
+    }
+    if (template === 'unblock_account') {
+      text_data = unblock_account(data);
+    }
+    if (template === 'block_account_info') {
+      text_data = block_account_info();
     }
     let msg = {
       to: user_email,

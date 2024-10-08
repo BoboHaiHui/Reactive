@@ -9,13 +9,13 @@ export class UserMapper extends BaseMapper<User> {
     super(dbConnection);
   }
 
-  async register(tableName: string, userData: User): Promise<boolean> {
+  async register(tableName: string, userData: User): Promise<number | null> {
     let userRegistred: User;
     userRegistred = await this.create(tableName, userData);
-    if (userRegistred) {
-      return true;
+    if (userRegistred.id) {
+      return userRegistred.id;
     } else {
-      return false;
+      return null;
     }
   }
 
@@ -36,10 +36,27 @@ export class UserMapper extends BaseMapper<User> {
     }
   }
 
+  async getUserIdByEmail(email: string): Promise<number | null> {
+    const tableName = 'users';
+    const field = 'email';
+    let user: User;
+    try {
+      user = await this.retrieveOne(tableName, field, email);
+      if (user) {
+        return user[0].id;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      logger.debug('Get user ID error');
+      throw error;
+    }
+  }
+
   async activateAccount(email: string): Promise<boolean> {
     const tableName = 'users';
     const field = 'email';
-    const model = { blocked: 0, activation_code: null };
+    const model = { blocked: 0, password_attempts: 0 };
     try {
       const response = await this.update(tableName, model, field, email);
       if (response) {
@@ -63,4 +80,30 @@ export class UserMapper extends BaseMapper<User> {
       return null;
     }
   }
+
+  async updatePasswordAttempts(userEmail: string, attempts: number): Promise<void> {
+    const tableName: string = 'users';
+    const field: string = 'email';
+    const accountData = {
+      password_attempts: attempts
+    };
+    const response = await this.update(tableName, accountData, field, userEmail);
+    if (!response) {
+      logger.debug(`Error in reseting passwords attempts for ${userEmail}`);
+    }
+  }
+
+  async blockAccount(userEmail: string): Promise<void> {
+    const tableName: string = 'users';
+    const field: string = 'email';
+    const accountData = {
+      blocked: 1
+    };
+    const response = await this.update(tableName, accountData, field, userEmail);
+    if (!response) {
+      logger.debug(`Error in blocking usser: ${userEmail}`);
+    }
+  }
+
+  async unblockAccount(user_email: string) {}
 }

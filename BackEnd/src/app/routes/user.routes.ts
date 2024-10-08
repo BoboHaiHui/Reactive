@@ -17,4 +17,6 @@ userRoutes.route('/updateProfile').patch(checkPermissions('UpdateMyProfile'), us
 
 userRoutes.route('/activateAccount').patch(userController.activateAccount);
 
+userRoutes.route('/unblockAccount').patch(userController.unblockAccount);
+
 export default userRoutes;

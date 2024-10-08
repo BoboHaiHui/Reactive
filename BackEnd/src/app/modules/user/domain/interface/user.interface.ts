@@ -1,4 +1,6 @@
-export interface IUser {
+import { IBaseModel } from '../../../../shared/domain/baseModel.interface';
+
+export interface IUser extends IBaseModel {
   id?: number;
   firstName: string;
   lastName: string;
@@ -6,5 +8,5 @@ export interface IUser {
   password: string;
   roleId: number;
   blocked: Boolean;
-  activation_code: string;
+  password_attempt?: number;
 }

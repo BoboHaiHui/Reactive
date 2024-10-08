@@ -32,7 +32,13 @@ const config = {
     defaultUserId: 2,
     blocked: true,
     activationCodeLength: 8,
-    password_sufix: process.env.PASSWORD_SUFIX
+    password_sufix: process.env.PASSWORD_SUFIX,
+    password_attempts: 3
+  },
+  validation_codes: {
+    activateAccountCodeTTL: 1440,
+    unblockAccountCodeTTL: 2,
+    codeLength: 8
   },
   session: {
     sessionExpiration: 4,

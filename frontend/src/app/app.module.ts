@@ -21,6 +21,7 @@ import { AppRouteModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from 'src/shared/shared.module';
 import { RecoverPasswordComponent } from 'src/general-pages/recover-password/recover-password.component';
+import { MFAComponent } from 'src/general-pages/MFA/MFA.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { RecoverPasswordComponent } from 'src/general-pages/recover-password/rec
     HomeNavbarComponent,
     ErrorPageComponent,
     ActivateAccountComponent,
-    RecoverPasswordComponent
+    RecoverPasswordComponent,
+    MFAComponent
   ],
   imports: [
     BrowserModule,

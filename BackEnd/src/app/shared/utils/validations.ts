@@ -23,7 +23,15 @@ function emailValidator(email: string): boolean {
   }
 }
 
+function isCodeExpired(expiresAt) {
+  const expirationDate = new Date(expiresAt);
+  const now = new Date();
+
+  return now > expirationDate;
+}
+
 export const utils = {
   passwordValidator: passwordValidator,
-  emailValidator: emailValidator
+  emailValidator: emailValidator,
+  isCodeExpired: isCodeExpired
 };
