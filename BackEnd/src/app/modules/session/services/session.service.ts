@@ -38,6 +38,9 @@ export class SessionService {
     return await this.sessionMapper.retrieveSessionData(sessionId);
   }
 
+  // TO DO! Save some metadata for all the session created for the same user : Location, Device, IP, User agent etc
+  // Add the possibility to delete the session for certain device based on the user selection.
+  // Also, add an option that will call deleteUserSessions method!!!
   async deleteSessionById(sessionId: string): Promise<void> {
     const field = 'sessionId';
     return await this.sessionMapper.deleteSession(field, sessionId);

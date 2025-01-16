@@ -46,12 +46,12 @@ export class LoginComponent implements OnInit {
     const url = 'http://localhost:4000/user/login';
     try {
       const response = await this.profileService.login(url, this.loginData);
-      if (response.error.data === 'MFA required') {
+      if (response.error?.data === 'MFA required') {
         this.router.navigateByUrl(`MFA/${this.loginData.email}`);
       }
     } catch (error) {
       console.error('Login failed:', error.message);
-      this.bannerService.showBanner('Login failed. Please check your credentials and try again.', 'error'); // Trigger the banner on failure
+      this.bannerService.showBanner('Login failed. Please check your credentials and try again.', 'error');
     }
   }
 }

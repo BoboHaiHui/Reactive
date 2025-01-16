@@ -6,13 +6,17 @@ import { IProfileUserData } from './profileUserData.interface';
   providedIn: 'root'
 })
 export class ProfileStore {
-  private userProfileData: IProfileUserData;
+  private userProfileData: IProfileUserData | null = null;
 
-  setUserProfileData(userData: IProfileUserData) {
+  setUserProfileData(userData: IProfileUserData): void {
     this.userProfileData = userData;
   }
 
-  getUserProfileData() {
+  getUserProfileData(): IProfileUserData | null {
     return this.userProfileData;
+  }
+
+  clearUserProfileData(): void {
+    this.userProfileData = null;
   }
 }

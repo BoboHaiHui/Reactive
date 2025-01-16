@@ -19,4 +19,6 @@ userRoutes.route('/activateAccount').patch(userController.activateAccount);
 
 userRoutes.route('/unblockAccount').patch(userController.unblockAccount);
 
+userRoutes.route('/resendCode').patch(userController.resendCode);
+
 export default userRoutes;
