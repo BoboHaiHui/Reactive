@@ -2,6 +2,7 @@ import { ProfileService } from 'src/shared/services/profile.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { BannerService } from 'src/shared/services/banner.service';
 
 @Component({
   selector: 'app-MFA',
@@ -10,48 +11,65 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class MFAComponent implements OnInit {
   activateCodeForm: FormGroup;
-  activateEmail: string | null;
+  unblockEmail: string | null;
+  isResendDisabled: boolean = true;
+  resendTimeout: any;
+  resendCountdown: number = 120;
 
   constructor(
     private profileService: ProfileService,
     private activatedRoute: ActivatedRoute,
+    private bannerService: BannerService,
     private router: Router,
     private fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    // Initialize form using FormBuilder for a cleaner setup
     this.activateCodeForm = this.fb.group({
       activateCode: ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[0-9]).{8,20}')]]
     });
 
-    // Retrieve the email from the route parameter
-    this.activateEmail = this.activatedRoute.snapshot.paramMap.get('email');
+    this.unblockEmail = this.activatedRoute.snapshot.paramMap.get('email');
+    this.startResendTimer();
   }
 
   onSubmit() {
-    if (this.activateCodeForm.valid && this.activateEmail) {
+    if (this.activateCodeForm.valid && this.unblockEmail) {
       const activateCode = this.activateCodeForm.get('activateCode')?.value;
       this.profileService
-        .activate_account(this.activateEmail, activateCode) // Adjust method name for clarity
+        .unblock_account(this.unblockEmail, activateCode)
         .then(response => {
-          console.log('Activation successful:', response);
           if (response) {
-            // Show a success toaster message
-            // Assuming a banner/toaster service is available in the app
-            this.router.navigateByUrl('login');
+            this.bannerService.showBanner('Account was unblocked', 'info');
           } else {
-            // Show error message and navigate to error page
-            this.router.navigateByUrl('error-page');
+            this.bannerService.showBanner('Code is invalid', 'error');
           }
         })
         .catch(error => {
           console.error('Error during activation:', error);
-          // Show an error toaster message
         });
     } else {
-      // If the form is invalid, mark all controls as touched to trigger validation messages
       this.activateCodeForm.markAllAsTouched();
     }
+  }
+
+  resendCode() {
+    const response = this.profileService.resendCode(this.unblockEmail);
+    this.bannerService.showBanner('If the email exists, an email was send with the new unblock code!', 'info');
+    this.startResendTimer();
+  }
+
+  startResendTimer() {
+    this.isResendDisabled = true;
+    this.resendCountdown = 120;
+
+    this.resendTimeout = setInterval(() => {
+      if (this.resendCountdown > 0) {
+        this.resendCountdown--;
+      } else {
+        clearInterval(this.resendTimeout);
+        this.isResendDisabled = false;
+      }
+    }, 1000);
   }
 }

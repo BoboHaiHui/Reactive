@@ -167,7 +167,6 @@ export class UserService {
     return this.responseMessage;
   }
 
-  // add logic to the method
   async unblockAccount(user_email: string, unblock_code: string): Promise<IResponceMessage> {
     let checkUser: User;
     let sessionCookie: string;
@@ -193,6 +192,7 @@ export class UserService {
         await validationCodesService.markAsUsed(userId);
         return this.responseMessage;
       }
+
       this.responseMessage = { statusText: 'fail', data: 'Code is not valid!' };
       return this.responseMessage;
     } catch (error) {
@@ -209,6 +209,30 @@ export class UserService {
     }
     this.responseMessage = { statusText: 'success', data: 'SessionId was deleted' };
     return this.responseMessage;
+  }
+
+  async resendCode(user_email: string): Promise<IResponceMessage> {
+    try {
+      const userId: number = await this.userMapper.getUserIdByEmail(user_email);
+      if (userId) {
+        const validationCodeData = await validationCodesService.getCodeData(userId);
+        const isExpired = utils.isCodeExpired(validationCodeData?.expires_at);
+        if (validationCodeData && !validationCodeData?.used && isExpired) {
+          const unblockCode = await validationCodesService.createUnblockAccountCode(userId, ValidationCodeType.blockAccount);
+          if (unblockCode) {
+            await emailService.sendMail(user_email, 'Unblock account code', 'unblock_account', [unblockCode]);
+          }
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.responseMessage = {
+        statusText: 'success',
+        data: 'If the account exists, an email was send with an unblock code!'
+      };
+      return this.responseMessage;
+    }
   }
 
   async updateProfile(userData: IUpdateProfileInput, userEmail: string, sessionId: string): Promise<boolean> {
@@ -258,16 +282,16 @@ export class UserService {
 
   async sendUserProfileData(req): Promise<IUserProfileData | null> {
     if (req.sessionData && req.sessionData[0] != null) {
-      const checkUser = await this.userMapper.retrieveOne('users', 'email', req.sessionData[0].email);
+      const checkUser = await this.userMapper.retrieveOne('users', 'email', req.sessionData[0].userEmail);
       if (checkUser) {
         this.responseMessage = {
           statusText: 'success',
           data: 'User profile data',
           userData: {
-            firstName: checkUser.firstName,
-            lastName: checkUser.lastName,
-            email: checkUser.email,
-            roleId: checkUser.roleId
+            firstName: checkUser[0].firstName,
+            lastName: checkUser[0].lastName,
+            email: checkUser[0].email,
+            roleId: checkUser[0].roleId
           }
         };
       } else {

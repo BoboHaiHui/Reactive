@@ -51,7 +51,7 @@ async function login(req, res) {
       const sessionId = responseMessage.data;
       res.cookie('sessionId', sessionId, { domain: 'localhost', httpOnly: true, secure: true, samesite: 'strict' });
       responseMessage.data = 'Login successful';
-      res.status(201).json(responseMessage);
+      res.status(200).json(responseMessage);
     } else if (responseMessage.statusText === 'blocked' && responseMessage.data === 'MFA required') {
       res.status(403).json({ statusText: 'blocked', data: 'MFA required' });
     } else {
@@ -102,6 +102,23 @@ async function unblockAccount(req, res) {
       const sessionId = responseMessage.data;
       res.cookie('sessionId', sessionId, { domain: 'localhost', httpOnly: true, secure: true, samesite: 'strict' });
       responseMessage.data = 'Login successful';
+      res.status(200).json(responseMessage);
+    } else {
+      res.status(422).json(responseMessage);
+    }
+  } catch (error) {
+    logger.error(error.message, { description: 'unblock account error', securityFlag: false, severity: 7 });
+    res.status(500).json({ statusText: 'fail', data: null });
+  }
+}
+
+async function resendCode(req, res) {
+  const rawUnblockAccountData: IUnblockAccountData = req.body;
+  let responseMessage: IResponceMessage;
+  try {
+    responseMessage = await userService.resendCode(rawUnblockAccountData.email);
+    if (responseMessage.statusText === 'success') {
+      responseMessage.data = responseMessage.data;
       res.status(201).json(responseMessage);
     } else {
       res.status(422).json(responseMessage);
@@ -130,5 +147,6 @@ export const userController = {
   logout: logout,
   sendUserProfileData: sendUserProfileData,
   activateAccount: activateAccount,
-  unblockAccount: unblockAccount
+  unblockAccount: unblockAccount,
+  resendCode: resendCode
 };

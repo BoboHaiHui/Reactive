@@ -2,6 +2,7 @@ import { ProfileService } from 'src/shared/services/profile.service';
 import { ProfileStore } from 'src/shared/stores/profileUserData.store';
 
 import { Component, OnInit } from '@angular/core';
+import { BannerService } from 'src/shared/services/banner.service';
 
 @Component({
   selector: 'app-user-navbar',
@@ -10,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserNavbarComponent implements OnInit {
   userData: any;
-  constructor(private profileStore: ProfileStore, private profileService: ProfileService) {}
+  constructor(private profileStore: ProfileStore, private profileService: ProfileService, private bannerService: BannerService) {}
 
   ngOnInit(): void {
     const userProfileData = this.profileStore.getUserProfileData();
@@ -18,6 +19,9 @@ export class UserNavbarComponent implements OnInit {
   }
 
   async logout() {
-    await this.profileService.logout();
+    const response = await this.profileService.logout();
+    if (!response) {
+      this.bannerService.showBanner('Logout Error! Session is still active', 'error');
+    }
   }
 }

@@ -59,6 +59,13 @@ export class ValidationCodeService {
     const isCodeMatch = codeData.code === rawActivationCode;
     const isCodeExpired = utils.isCodeExpired(codeData.expires_at);
     const isCodeValid = isCodeMatch && !isCodeExpired && codeData.code != null && !codeData.used;
+    if (!isCodeValid) {
+      await this.increaseCodeAttempts(codeData.userId, codeData.code_attempts);
+    }
     return isCodeValid;
+  }
+
+  async increaseCodeAttempts(userId: number, code_attempts: number) {
+    await this.validationCodesMaper.increaseCodeAttempts(userId, code_attempts);
   }
 }

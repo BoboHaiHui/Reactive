@@ -55,6 +55,46 @@ export class ProfileService {
     }
   }
 
+  async unblock_account(email: string, unblockCode: string) {
+    const url = 'http://localhost:4000/user/unblockAccount';
+    const userActivationAccountData = {
+      email: email,
+      unblockCode: unblockCode
+    };
+    const options = { observe: 'response' as const, data: [] };
+    try {
+      const res: HttpResponse<any> = await this.http.patch(url, userActivationAccountData, options).toPromise();
+      if (res.status == 200) {
+        this.profileStore.setUserProfileData(res.body?.userData);
+        await this.navigateToRoleMenu(this.profileStore.getUserProfileData().roleId);
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      if (error instanceof HttpErrorResponse) {
+        if (error.status === 422) {
+          return false;
+        }
+      }
+      return this.router.navigateByUrl('error-page');
+    }
+  }
+
+  async resendCode(email: string) {
+    const url = 'http://localhost:4000/user/resendCode';
+    const resendCodeData = {
+      email: email
+    };
+    const options = { observe: 'response' as const, data: [] };
+    const res: HttpResponse<any> = await this.http.patch(url, resendCodeData, options).toPromise();
+    if (res.status == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public async login(url: string, loginData: ILoginData): Promise<any> {
     const userCredentials: ILoginData = {
       email: loginData.email,
@@ -63,7 +103,7 @@ export class ProfileService {
     const options = { observe: 'response' as const, withCredentials: true };
     try {
       const res: HttpResponse<any> = await this.http.post(url, userCredentials, options).toPromise();
-      if (res.status === 201) {
+      if (res.status === 200) {
         this.profileStore.setUserProfileData(res.body?.userData);
         this.navigateToRoleMenu(this.profileStore.getUserProfileData().roleId);
         return res;
@@ -85,6 +125,7 @@ export class ProfileService {
   public async requestProfileUserData() {
     const url: string = 'http://localhost:4000/user/profileUserData';
     const options = { observe: 'response' as const, withCredentials: true };
+
     let profileUserData = this.profileStore.getUserProfileData();
     if (profileUserData) {
       return profileUserData;
@@ -95,11 +136,9 @@ export class ProfileService {
           profileUserData = res.body?.userData;
           this.profileStore.setUserProfileData(profileUserData);
           return profileUserData;
-        } else {
-          return null;
         }
+        return null;
       } catch {
-        console.error('Internal server error');
         throw new Error('Internal server error');
       }
     }
@@ -117,7 +156,6 @@ export class ProfileService {
         return false;
       }
     } catch {
-      console.error('Internal server error');
       throw new Error('Internal server error');
     }
   }
@@ -138,14 +176,13 @@ export class ProfileService {
   async logout() {
     const url = 'http://localhost:4000/user/logout';
     const options = { observe: 'response' as const, withCredentials: true };
-    this.profileStore.setUserProfileData(null);
+    this.profileStore.clearUserProfileData();
     try {
       const res: HttpResponse<any> = await this.http.get(url, options).toPromise();
       if (res.status == 200) {
         this.router.navigateByUrl('');
         return true;
       } else {
-        //add banner - logout error! sessionId could still be active
         return false;
       }
     } catch {

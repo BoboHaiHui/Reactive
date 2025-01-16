@@ -22,7 +22,6 @@ const canActivateWithRole = async (roleChecker: (userData: any) => boolean) => {
     router.navigate(['login']);
     return false;
   }
-  // return true;
 };
 
 export const canActivateUser = async () => {
@@ -34,3 +33,17 @@ export const canActivateAdmin = async () => {
   const profileService = inject(ProfileService);
   return await canActivateWithRole(profileService.isAdmin);
 };
+
+// export const canActivateLogin = async () => {
+//   const router = inject(Router);
+//   const profileService = inject(ProfileService);
+//   if (profileService.isAdmin) {
+//     await router.navigate(['/admin']);
+//     return false;
+//   }
+//   if (profileService.isUser) {
+//     await router.navigate(['/user']);
+//     return false;
+//   }
+//   return true;
+// };

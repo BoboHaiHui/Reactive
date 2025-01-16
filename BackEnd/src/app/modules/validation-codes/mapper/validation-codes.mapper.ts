@@ -72,7 +72,8 @@ export class ValidationCodesMapper extends BaseMapper<ValidationCodes> {
   async markAsUsed(userId: number): Promise<boolean> {
     const field = 'userId';
     const model = {
-      used: true
+      used: true,
+      code_attempts: 0
     };
     try {
       const response = await this.update(this.tableName, model, field, userId);
@@ -83,6 +84,24 @@ export class ValidationCodesMapper extends BaseMapper<ValidationCodes> {
       }
     } catch (error) {
       logger.debug('MarkAsUsed activation code error');
+      throw error;
+    }
+  }
+
+  async increaseCodeAttempts(userId: number, code_attempts: number): Promise<boolean> {
+    const field = 'userId';
+    const model = {
+      code_attempts: code_attempts + 1
+    };
+    try {
+      const response = await this.update(this.tableName, model, field, userId);
+      if (response) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      logger.debug('IncreaseCodeAttempts code error');
       throw error;
     }
   }

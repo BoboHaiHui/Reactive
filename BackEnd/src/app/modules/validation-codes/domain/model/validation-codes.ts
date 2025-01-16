@@ -10,4 +10,5 @@ export class ValidationCodes implements IValidationCodes {
   expires_at?: Date;
   expires_after: number;
   used?: boolean;
+  code_attempts?: number;
 }

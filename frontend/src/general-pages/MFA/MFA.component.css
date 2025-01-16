@@ -21,6 +21,6 @@ mat-card-title {
 
 .button-container {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   margin-top: 16px;
 }

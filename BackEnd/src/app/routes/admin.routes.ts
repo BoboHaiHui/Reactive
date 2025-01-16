@@ -11,9 +11,9 @@ adminRoutes.route('/roles/createRole').post(ensureAuth(), checkPermissions('Crea
 
 adminRoutes.route('/roles/updateRole').patch(ensureAuth(), checkPermissions('UpdateRole'), roleController.updateRoleByID);
 
-adminRoutes.route('/roles/retrieveRoleById').get(roleController.retrieveRoleById);
+adminRoutes.route('/roles/retrieveRoleById').get(ensureAuth(), checkPermissions('RetrieveRole'), roleController.retrieveRoleById);
 
-adminRoutes.route('/roles/retrieveAllRoles').get(roleController.retrieveAllRoles);
+adminRoutes.route('/roles/retrieveAllRoles').get(ensureAuth(), checkPermissions('RetrieveRole'), roleController.retrieveAllRoles);
 
 adminRoutes.route('/roles/deleteRoleByType').delete(ensureAuth(), checkPermissions('DeleteRole'), roleController.deleteRole);
 
