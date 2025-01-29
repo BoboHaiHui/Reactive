@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { userController } from '../modules/user/controller/user.controller';
+import { userAuthController } from '../modules/user/controller/user.auth.controller';
 import { checkPermissions } from '../shared/middleware/checkPermission';
 
 const userRoutes = express.Router();
@@ -8,6 +9,12 @@ const userRoutes = express.Router();
 userRoutes.route('/register').post(userController.register);
 
 userRoutes.route('/login').post(userController.login);
+
+userRoutes.route('/auth/:platform').get(userAuthController.socialAuth);
+
+userRoutes.route('/auth/:platform/callback').get(userAuthController.socialPlatformCallback);
+
+// userRoutes.route('/socialAuth').get(userAuthController.socialAuth);
 
 userRoutes.route('/logout').get(userController.logout);
 

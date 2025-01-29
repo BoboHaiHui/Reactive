@@ -47,6 +47,14 @@ const config = {
   email: {
     session_API: process.env.SENDGRID_API_KEY,
     from_email_address: process.env.FROM_EMAIL
+  },
+  oAuth: {
+    secretKey: 'secret',
+    google: {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: 'http://localhost:4000/user/auth/google/callback'
+    }
   }
 };
 

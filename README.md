@@ -12,6 +12,11 @@ Start-Application: Docker compose up
 
 TO DO!!!
 
--finish FE component for block/unblock feature
+Bugs
 
----
+-block the login page if the user is already logged-in
+-investigate why the cookie is not updating after the account has been unlocked
+
+Features
+
+## -OAuth 2.0
