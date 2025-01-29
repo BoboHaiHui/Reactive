@@ -271,9 +271,14 @@ export class UserService {
     }
   }
 
+  async findUserByEmail(userEmail: String): Promise<User> {
+    const user: User = await this.userMapper.retrieveOne('users', 'email', userEmail);
+    return user;
+  }
+
   async checkEmailExistance(userEmail: String): Promise<boolean> {
-    const validation: Object = await this.userMapper.retrieveOne('users', 'email', userEmail);
-    if (Object.keys(validation).length) {
+    const user: User = await this.findUserByEmail(userEmail);
+    if (Object.keys(user).length) {
       return true;
     } else {
       return false;

@@ -22,6 +22,7 @@ import { AppComponent } from './app.component';
 import { SharedModule } from 'src/shared/shared.module';
 import { RecoverPasswordComponent } from 'src/general-pages/recover-password/recover-password.component';
 import { MFAComponent } from 'src/general-pages/MFA/MFA.component';
+import { SocialAuthComponent } from '../general-pages/social-auth/social-auth.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { MFAComponent } from 'src/general-pages/MFA/MFA.component';
     ErrorPageComponent,
     ActivateAccountComponent,
     RecoverPasswordComponent,
-    MFAComponent
+    MFAComponent,
+    SocialAuthComponent
   ],
   imports: [
     BrowserModule,

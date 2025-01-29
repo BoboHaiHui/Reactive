@@ -5,6 +5,7 @@ import { RoleService } from '../../modules/role/services/role.service';
 import { SessionMapper } from '../../modules/session/mapper/session.mapper';
 import { SessionService } from '../../modules/session/services/session.service';
 import { UserMapper } from '../../modules/user/mapper/user.mapper';
+import { UserAuthService } from '../../modules/user/services/user.auth.service';
 import { UserService } from '../../modules/user/services/user.service';
 import { ValidationCodesMapper } from '../../modules/validation-codes/mapper/validation-codes.mapper';
 import { ValidationCodeService } from '../../modules/validation-codes/services/validation-code.service';
@@ -42,6 +43,12 @@ function createUserMapper(): UserMapper {
 function createUserService(): UserService {
   const userMapper = createUserMapper();
   return new UserService(userMapper);
+}
+
+function createUserAuthService(): UserAuthService {
+  const userService = createUserService();
+  const userMapper = createUserMapper();
+  return new UserAuthService(userService, userMapper);
 }
 
 // Factory function to create an instance of RoleMapper
@@ -91,6 +98,7 @@ const roleService = createRoleService();
 const sessionService = createSessionService();
 const emailService = createEmailService();
 const validationCodesService = createValidationCodesService();
+const userAuthService = createUserAuthService();
 
 export {
   baseMapper,
@@ -103,5 +111,6 @@ export {
   roleService,
   sessionService,
   emailService,
-  validationCodesService
+  validationCodesService,
+  userAuthService
 };

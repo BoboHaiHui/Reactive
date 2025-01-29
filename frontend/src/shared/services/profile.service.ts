@@ -191,6 +191,11 @@ export class ProfileService {
     }
   }
 
+  async socialAuth(socialPlatform: string) {
+    const url = `http://localhost:4000/user/auth/${socialPlatform}`;
+    window.location.href = url;
+  }
+
   isUser(profileUserData: IProfileUserData) {
     if (profileUserData?.roleId == 2) {
       return true;

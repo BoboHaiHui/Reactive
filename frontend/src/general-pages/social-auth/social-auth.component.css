@@ -1,0 +1,16 @@
+.images-wrapper {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.images-wrapper img {
+  width: 34px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.images-wrapper img:hover {
+  transform: scale(1.2);
+}
