@@ -15,7 +15,6 @@ passport.use(
         if (email) {
           const user = await userAuthService.checkUserByEmail(email);
           if (user) {
-            console.log('ACCESS TOKEN^^^', accessToken);
             return done(null, user);
           }
           return done(null, false, { message: 'No account found for this email' });
