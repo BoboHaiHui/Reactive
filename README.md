@@ -19,4 +19,4 @@ Bugs
 
 Features
 
-## -OAuth 2.0
+## Add Recaptcha
