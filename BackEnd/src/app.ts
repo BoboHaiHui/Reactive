@@ -12,7 +12,7 @@ let app = express();
 app.use(
   cors({
     origin: ['http://localhost:4200'],
-    allowedHeaders: ['Content-type', 'Authorization', 'Set-Cookie', 'Cookie'],
+    allowedHeaders: ['Content-type', 'Authorization', 'Cookie'],
     credentials: true,
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'PATCH']
   })
@@ -24,8 +24,8 @@ app.use(cookieParser());
 app.use(addContextPermissions);
 
 //add req.body
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(express.json({ limit: '10kb' }));
 
 //add application routes
 app.use('/user', userRoutes);
