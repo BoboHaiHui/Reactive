@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 import { IProfileUserData } from '../stores/profileUserData.interface';
 import { ProfileStore } from '../stores/profileUserData.store';
-import { ILoginData, IRegisterData } from './profile.service.interface';
+import { ILoginData, IRegisterData, IResetPassword } from './profile.service.interface';
 
 @Injectable()
 export class ProfileService {
@@ -157,6 +157,29 @@ export class ProfileService {
       }
     } catch {
       throw new Error('Internal server error');
+    }
+  }
+
+  public async requestPasswordReset(userEmail: string) {
+    const url = 'http://localhost:4000/user/requestResetPassword';
+    const options = { observe: 'response' as const, withCredentials: true };
+    const data = { email: userEmail };
+    try {
+      const res: HttpResponse<any> = await this.http.post(url, data, options).toPromise();
+      return true;
+    } catch {
+      throw new Error('Requesting password reset error');
+    }
+  }
+
+  public async resetPassword(resetPasswordData: IResetPassword) {
+    const url = 'http://localhost:4000/user/resetPassword';
+    const options = { observe: 'response' as const, withCredentials: true };
+    try {
+      const res: HttpResponse<any> = await this.http.patch(url, resetPasswordData, options).toPromise();
+      return true;
+    } catch {
+      throw new Error('Reset password error');
     }
   }
 

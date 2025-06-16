@@ -76,12 +76,12 @@ function createEmailService(): EmailService {
 }
 
 // Factory function to create an instance of RoleMapper
-function createValidationCodesMapper(): ValidationCodesMapper {
+function updateValidationCodesMapper(): ValidationCodesMapper {
   return new ValidationCodesMapper(connectionDB);
 }
 
-function createValidationCodesService(): ValidationCodeService {
-  const validationCodesMapper = createValidationCodesMapper();
+function updateValidationCodesService(): ValidationCodeService {
+  const validationCodesMapper = updateValidationCodesMapper();
   return new ValidationCodeService(validationCodesMapper);
 }
 
@@ -97,7 +97,7 @@ const roleService = createRoleService();
 // const sessionMapper = createSessionMapper();
 const sessionService = createSessionService();
 const emailService = createEmailService();
-const validationCodesService = createValidationCodesService();
+const validationCodesService = updateValidationCodesService();
 const userAuthService = createUserAuthService();
 
 export {

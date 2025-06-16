@@ -21,7 +21,7 @@ import { CreateRoleDialogComponent } from './components/dialogs/create-role-dial
 
 @NgModule({
   imports: [HttpClientModule, CommonModule, AngularMaterialModule, RouterModule.forChild(AdminRoutes), SharedModule, FormsModule],
-  exports: [],
+  exports: [FormsModule],
   providers: [AdminService, RoleService],
   declarations: [
     AdminComponent,

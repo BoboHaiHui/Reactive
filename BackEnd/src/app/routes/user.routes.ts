@@ -28,4 +28,8 @@ userRoutes.route('/unblockAccount').patch(userController.unblockAccount);
 
 userRoutes.route('/resendCode').patch(userController.resendCode);
 
+userRoutes.route('/requestResetPassword').post(userController.requestResetPassword);
+
+userRoutes.route('/resetPassword').patch(userController.resetPassword);
+
 export default userRoutes;
