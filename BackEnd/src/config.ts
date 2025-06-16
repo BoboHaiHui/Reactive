@@ -38,6 +38,7 @@ const config = {
   validation_codes: {
     activateAccountCodeTTL: 1440,
     unblockAccountCodeTTL: 2,
+    resetPasswordCodeTTL: 3,
     codeLength: 8
   },
   session: {

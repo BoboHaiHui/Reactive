@@ -9,7 +9,7 @@ export class ValidationCodesMapper extends BaseMapper<ValidationCodes> {
   }
   private tableName = 'user_validation_codes';
 
-  async createValidationCode(data: ValidationCodes): Promise<boolean> {
+  async updateValidationCode(data: ValidationCodes): Promise<boolean> {
     //needs UPDATE not INSERT
     console.log('CODES DATA', data);
     const sql =
@@ -32,7 +32,7 @@ export class ValidationCodesMapper extends BaseMapper<ValidationCodes> {
     }
   }
 
-  async createActivateAccountCode(data: ValidationCodes): Promise<boolean> {
+  async createValidationAccountCode(data: ValidationCodes): Promise<boolean> {
     const sql = 'INSERT INTO ?? (userId, code, type, expires_at) VALUES (?,?,?, NOW() + INTERVAL ? MINUTE)';
     const inserts = [this.tableName, data.userId, data.code, data.type, data.expires_after];
     let connection;

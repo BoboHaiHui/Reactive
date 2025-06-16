@@ -1,6 +1,6 @@
 # Reactive
 
-Date: 19.09.2024
+Date: 16.06.2025
 
 Scope: React, Node and MySQL platform application
 
@@ -9,6 +9,9 @@ Status: under-development
 Start-Application: Docker compose up
 -If docker is not enabled:
 -npm start for BackEnd
+
+Implemented:
+-reset password feature
 
 TO DO!!!
 

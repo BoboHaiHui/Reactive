@@ -4,6 +4,8 @@ import {
   IActivateAccountData,
   ILoginInput,
   IRegisterInput,
+  IRequestResetPassword,
+  IResetPassword,
   IResponceMessage,
   IUnblockAccountData,
   IUpdateProfileInput,
@@ -112,6 +114,28 @@ async function unblockAccount(req, res) {
   }
 }
 
+async function requestResetPassword(req, res) {
+  const rawRequestResetPassword: IRequestResetPassword = req.body;
+  try {
+    if (rawRequestResetPassword.email) {
+      await userService.requestResetPassword(rawRequestResetPassword.email);
+    }
+  } catch (error) {
+    logger.error(error.message, { description: 'request reset password error', securityFlag: false, severity: 2 });
+    res.status(500).json({ statusText: 'fail', data: null });
+  }
+}
+
+async function resetPassword(req, res) {
+  const rawResetPasswordData: IResetPassword = { email: req.body.email, resetCode: req.body.resetCode, newPassword: req.body.newPassword };
+  try {
+    await userService.resetPassword(rawResetPasswordData);
+  } catch (error) {
+    logger.error(error.message, { description: 'reset password error', securityFlag: false, severity: 2 });
+    res.status(500).json({ statusText: 'fail', data: null });
+  }
+}
+
 async function resendCode(req, res) {
   const rawUnblockAccountData: IUnblockAccountData = req.body;
   let responseMessage: IResponceMessage;
@@ -148,5 +172,7 @@ export const userController = {
   sendUserProfileData: sendUserProfileData,
   activateAccount: activateAccount,
   unblockAccount: unblockAccount,
-  resendCode: resendCode
+  resendCode: resendCode,
+  requestResetPassword: requestResetPassword,
+  resetPassword: resetPassword
 };

@@ -12,28 +12,28 @@ export class ValidationCodeService {
     return await generateRandomBytes(codeLength);
   }
 
-  async createUnblockAccountCode(userId: number, codeType: ValidationCodeType): Promise<string | null> {
+  async updateAccountCode(userId: number, codeType: ValidationCodeType, codeTTL: number): Promise<string | null> {
     const data: ValidationCodes = {
       userId: userId,
       code: await this.generateRandomCode(config.validation_codes.codeLength),
       type: codeType,
-      expires_after: config.validation_codes.unblockAccountCodeTTL
+      expires_after: codeTTL
     };
-    const isValudateCodeCreated = await this.validationCodesMaper.createValidationCode(data);
+    const isValudateCodeCreated = await this.validationCodesMaper.updateValidationCode(data);
     if (isValudateCodeCreated) {
       return data.code;
     }
     return null;
   }
 
-  async createActivateAccountCode(userId: number): Promise<string | null> {
+  async createValidationAccountCode(userId: number, codeType: ValidationCodeType, codeTTL: number): Promise<string | null> {
     const data: ValidationCodes = {
       userId: userId,
       code: await this.generateRandomCode(config.validation_codes.codeLength),
-      type: ValidationCodeType.activateAccount,
-      expires_after: config.validation_codes.unblockAccountCodeTTL
+      type: codeType,
+      expires_after: codeTTL
     };
-    const isValudateCodeCreated = await this.validationCodesMaper.createActivateAccountCode(data);
+    const isValudateCodeCreated = await this.validationCodesMaper.createValidationAccountCode(data);
     if (isValudateCodeCreated) {
       return data.code;
     }

@@ -6,6 +6,7 @@ import { utils } from '../../../shared/utils/validations';
 import {
   ILoginInput,
   IRegisterInput,
+  IResetPassword,
   IResponceMessage,
   IUpdateProfileInput,
   IUserProfileData
@@ -13,6 +14,7 @@ import {
 import { User } from '../domain/models/user';
 import { UserMapper } from '../mapper/user.mapper';
 import { ValidationCodeType } from '../../validation-codes/domain/interface/validation-codes.enum';
+import { IValidationCodes } from '../../validation-codes/domain/interface/validation-codes.interface';
 
 export class UserService {
   private responseMessage: IResponceMessage | IUserProfileData;
@@ -65,7 +67,11 @@ export class UserService {
 
       registerData.password = await bcrypt.hash(rawRegisterData.password + config.user.password_sufix, 10);
       const userID = await this.userMapper.register(tableName, registerData);
-      const activateAccountCode = await validationCodesService.createActivateAccountCode(userID);
+      const activateAccountCode = await validationCodesService.createValidationAccountCode(
+        userID,
+        ValidationCodeType.activateAccount,
+        config.validation_codes.activateAccountCodeTTL
+      );
       if (userID && activateAccountCode) {
         await emailService.sendMail(registerData.email, 'Activate Reactive Account', 'activate_account', [
           activateAccountCode,
@@ -132,7 +138,11 @@ export class UserService {
           await this.userMapper.blockAccount(checkUser[0].email);
 
           logger.warning({ description: `User account ${checkUser[0]} has been blocked1`, severity: 5, securityFlag: true });
-          const unblockCode = await validationCodesService.createUnblockAccountCode(checkUser[0].id, ValidationCodeType.blockAccount);
+          const unblockCode = await validationCodesService.updateAccountCode(
+            checkUser[0].id,
+            ValidationCodeType.blockAccount,
+            config.validation_codes.unblockAccountCodeTTL
+          );
           if (unblockCode) {
             await emailService.sendMail(checkUser[0].email, 'Blocked account', 'block_account_info');
           }
@@ -218,7 +228,11 @@ export class UserService {
         const validationCodeData = await validationCodesService.getCodeData(userId);
         const isExpired = utils.isCodeExpired(validationCodeData?.expires_at);
         if (validationCodeData && !validationCodeData?.used && isExpired) {
-          const unblockCode = await validationCodesService.createUnblockAccountCode(userId, ValidationCodeType.blockAccount);
+          const unblockCode = await validationCodesService.updateAccountCode(
+            userId,
+            ValidationCodeType.blockAccount,
+            config.validation_codes.unblockAccountCodeTTL
+          );
           if (unblockCode) {
             await emailService.sendMail(user_email, 'Unblock account code', 'unblock_account', [unblockCode]);
           }
@@ -263,7 +277,7 @@ export class UserService {
     }
     try {
       const updatedUser = await this.userMapper.updateProfile(updateUserData, userEmail);
-      if (updateUserData) {
+      if (updatedUser) {
         return true;
       }
     } catch {
@@ -271,12 +285,12 @@ export class UserService {
     }
   }
 
-  async findUserByEmail(userEmail: String): Promise<User> {
+  async findUserByEmail(userEmail: string): Promise<User> {
     const user: User = await this.userMapper.retrieveOne('users', 'email', userEmail);
     return user;
   }
 
-  async checkEmailExistance(userEmail: String): Promise<boolean> {
+  async checkEmailExistance(userEmail: string): Promise<boolean> {
     const user: User = await this.findUserByEmail(userEmail);
     if (Object.keys(user).length) {
       return true;
@@ -315,6 +329,55 @@ export class UserService {
       return this.responseMessage;
     } else {
       return null;
+    }
+  }
+
+  async requestResetPassword(userEmail: string): Promise<any> {
+    if (utils.emailValidator(userEmail)) {
+      const user: User = await this.findUserByEmail(userEmail);
+      if (user) {
+        const accountCodeData: IValidationCodes = await validationCodesService.getCodeData(user[0].id);
+        if (accountCodeData.type == ValidationCodeType.PasswordReset || accountCodeData.used == true) {
+          const createResetPasswordCode = await validationCodesService.updateAccountCode(
+            user[0].id,
+            ValidationCodeType.PasswordReset,
+            config.validation_codes.resetPasswordCodeTTL
+          );
+          const data = [userEmail, createResetPasswordCode];
+          await emailService.sendMail(userEmail, 'Reset Password', 'request_password_reset', data);
+        }
+        return false;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  async resetPassword(rawData: IResetPassword): Promise<any> {
+    if (utils.emailValidator(rawData.email) && rawData.resetCode.length === 16) {
+      const userEmail = rawData.email;
+      const resetCode = rawData.resetCode;
+      const user: User = await this.findUserByEmail(userEmail);
+      if (user) {
+        let codeIsValid = await validationCodesService.isCodeValid(user[0].id, resetCode);
+        if (codeIsValid) {
+          if (utils.passwordValidator(rawData.newPassword)) {
+            const updateUserData: { firstName?: string; lastName?: string; password?: string } = {};
+            updateUserData.password = await bcrypt.hash(rawData.newPassword + config.user.password_sufix, 10);
+            try {
+              await validationCodesService.markAsUsed(user[0].id);
+              await this.userMapper.updateProfile(updateUserData, userEmail);
+              emailService.sendMail(userEmail, 'Update Password', 'user_account_update_info', 'password').catch(err => {
+                logger.debug('Email was not send');
+              });
+            } catch {
+              return null;
+            }
+          }
+        }
+      }
+    } else {
+      return false;
     }
   }
 }

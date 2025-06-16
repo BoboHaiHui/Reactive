@@ -11,6 +11,7 @@ import { RecoverPasswordComponent } from 'src/general-pages/recover-password/rec
 import { canActivateAdmin, canActivateUser } from 'src/shared/guards/auth-guards';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ResetPasswordComponent } from 'src/general-pages/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -21,7 +22,8 @@ const routes: Routes = [
       { path: 'register', component: RegisterComponent },
       { path: 'activate-account/:email', component: ActivateAccountComponent },
       { path: 'MFA/:email', component: MFAComponent },
-      { path: 'recover-password', component: RecoverPasswordComponent }
+      { path: 'recover-password', component: RecoverPasswordComponent },
+      { path: 'reset-password', component: ResetPasswordComponent }
     ]
   },
   { path: 'contact', component: ContactComponent },

@@ -16,6 +16,17 @@ export interface ILoginInput {
   password: string;
 }
 
+export interface IRequestResetPassword {
+  email: string;
+}
+
+export interface IResetPassword {
+  email: string;
+  resetCode: string;
+  newPassword: string;
+  oldPassword?: string;
+}
+
 export interface IResponceMessage {
   statusText: string;
   data: any;

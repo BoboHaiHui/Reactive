@@ -1,7 +1,13 @@
 import sgMail from '@sendgrid/mail';
 
 import config from '../../../../config';
-import { activate_account, block_account_info, unblock_account } from './templates/templates';
+import {
+  activate_account,
+  block_account_info,
+  request_password_reset,
+  unblock_account,
+  user_account_update_info
+} from './templates/templates';
 
 export class EmailService {
   constructor() {
@@ -32,6 +38,12 @@ export class EmailService {
     }
     if (template === 'block_account_info') {
       text_data = block_account_info();
+    }
+    if (template === 'user_account_update_info') {
+      text_data = user_account_update_info(data);
+    }
+    if (template === 'request_password_reset') {
+      text_data = request_password_reset(data);
     }
     let msg = {
       to: user_email,
